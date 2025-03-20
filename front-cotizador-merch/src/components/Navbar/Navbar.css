@@ -1,0 +1,29 @@
+.sticky {
+    position: sticky;
+    top: 0;
+    padding: 1px;
+    background-color: #444 ;
+}
+h3 {
+    margin: 0px;
+}
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #111;
+    height: 60px;
+    padding: 0px 80px;
+}
+.Option, .ActiveOption {
+    width: 120px;
+    text-align: center;
+    margin: 0px 30px;
+}
+.ActiveOption{
+    font-weight: 800;
+    font-size: large;
+}
+ul {
+list-style-type: none;
+}
