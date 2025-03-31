@@ -2,42 +2,40 @@ import { useState, useEffect, useContext, useRef } from "react";
 import { apiClient } from "../../config/axiosConfig";
 import NewProduct from "./NewProduct"; // Asegúrate de importar tu componente NewProduct
 import { ParametersContext } from '../../context/ParametersContext.jsx';
-import SelectCustomer from "./SelectCustomer"; // Asegúrate de importar tu componente SelectCustomer
+import SelectCustomer from "./Selectors/SelectCustomer.jsx"; // Asegúrate de importar tu componente SelectCustomer
+import SelectCustomerPayMethod from "./Selectors/SelectCustomerPaymentMethod.jsx"; // Asegúrate de importar tu componente SelectCustomerPaymentMethod
+
 
 const NewQuotation = () => {
-    const { monthlyRate } = useContext(ParametersContext); // Extraer monthlyRate del contexto
+    const today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    const { paramMonthlyRate } = useContext(ParametersContext); // Extraer monthlyRate del contexto
     const [formData, setFormData] = useState({
         id: "", // El ID se inicializa vacío
-        date: "", // La fecha se inicializa vacía
+        date: today, // La fecha se inicializa vacía
         customerId: "",
         customerName: "", // Nuevo campo para almacenar el nombre del cliente
         paymentMethodId: "",
-        pamentMethodName: "", // Nuevo campo para almacenar el nombre del método de pago
-        monthlyRate: "", // El monthlyRate se inicializa vacío
+        paymentMethodName: "", // Nuevo campo para almacenar el nombre del método de pago
+        monthlyRate: paramMonthlyRate, // El monthlyRate se inicializa con el valor del context
         currency: "Peso", // Valor por defecto
         quoteStatus: "Cotizado", // Valor por defecto
+        quoteUnitSellingPrice: 0, // Valor por defecto
+        quoteProductsDescription: "", // Valor por defecto
         isKit: false
     });
-
+    console.log("Params Monthly Rate: ",paramMonthlyRate," Form Data: ",formData)
+    const [defaultPayment, serDefaultPayment] = useState("")
     const [products, setProducts] = useState([]); // Estado para los productos agregados
     const [processes, setProcesses] = useState([]); // Estado para los procesos agregados
 
-    useEffect(() => {
-        // Inicializar fecha del día y monthlyRate desde el contexto
-        const today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            date: today,
-            monthlyRate: monthlyRate // Asigna monthlyRate desde el contexto
-        }));
-    }, []); // Ejecuta el efecto cuando monthlyRate cambia
-
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
+        console.log("Input changed: ", name, value);
         setFormData({
             ...formData,
             [name]: type === "checkbox" ? checked : value
         });
+        console.log("New Form Data: ",formData)
     };
 
     const handleAddProduct = () => {
@@ -75,15 +73,34 @@ const NewQuotation = () => {
         }
     };
 
-    const handleCustomerSelect = (customer) => {
-        setFormData({
-            ...formData,
-            customerId: customer._id,
-            customerName: customer.name,
-            paymentMethodId: customer.paymentMethodId,
-        });
+    const fetchCustomersPayMethodById = async (id) => {
+        try {
+            const response = await apiClient.get(`customer-payment-methods/${id}`);
+            return response.data.response.customer_payment_description;
+        } catch (error) {
+            console.error("Error al buscar clientes:", error);
+            // setFormData.paymentMethodName("ERROR"); // Restablece a vacío en caso de error
+        }
     };
 
+    const handleCustomerUpdate = async (customer) => {
+        const customerPayMethodName = await fetchCustomersPayMethodById(customer.customerPaymentMethodId);
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            customerId: customer._id || "",
+            customerName: customer.name || "",
+            paymentMethodId: customer.customerPaymentMethodId || "",
+            paymentMethodName: customerPayMethodName || "",
+        }));
+    };
+
+    const handleCustomerPaymentMethodUpdate = (customerPaymentMethod) => {
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            paymentMethodId: customerPaymentMethod._id || "",
+            paymentMethodName: customerPaymentMethod.customer_payment_description || "",
+        }));
+    }
     return (
         <div>
             <form onSubmit={handleSubmit}>
@@ -97,6 +114,8 @@ const NewQuotation = () => {
                             <td><label htmlFor="currency">Moneda</label></td>
                             <td><label htmlFor="quoteStatus">Estado</label></td>
                             <td><label htmlFor="isKit">Kit</label></td>
+                            <td><label htmlFor="quoteProductsDescription-display"></label>Descripción</td>
+                            <td><label htmlFor="quoteUnitSellingPrice-display"></label>Precio Unitario Consolidado</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -113,16 +132,13 @@ const NewQuotation = () => {
                             </td>
                             <td>
                                 {/* Usa el componente SelectCustomer */}
-                                <SelectCustomer onSelectCustomer={handleCustomerSelect} />
+                                <SelectCustomer onSelectCustomer={handleCustomerUpdate} />
+
                             </td>
                             <td>
-                                <input
-                                    type="text"
-                                    id="paymentMethodId"
-                                    name="paymentMethodId"
-                                    value={formData.paymentMethodId}
-                                    onChange={handleInputChange}
-                                />
+                                <SelectCustomerPayMethod
+                                    defaultPayment={formData.paymentMethodName}
+                                    onSelectCustomerPayMethod={handleCustomerPaymentMethodUpdate} />
                             </td>
                             <td>
                                 <input
@@ -170,12 +186,18 @@ const NewQuotation = () => {
                                     onChange={handleInputChange}
                                 />
                             </td>
+                            <td>
+                                <span id="quoteProductsDescription-display">{formData.quoteProductsDescription}</span>
+                            </td>
+                            <td>
+                                <span id="quoteUnitSellingPrice-display">{formData.quoteUnitSellingPrice}</span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
-                <button type="submit">Guardar Cotización</button>
+                <button type="submit">Crear Cotización</button>
             </form>
-            <div>
+            {/* <div>
                 <table>
                     <thead>
                         <tr>
@@ -210,7 +232,7 @@ const NewQuotation = () => {
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> */}
         </div>
 
     );

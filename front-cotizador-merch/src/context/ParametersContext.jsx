@@ -7,8 +7,8 @@ export const ParametersContext = createContext();
 // Proveedor del contexto
 export const ParametersProvider = ({ children }) => {
     // Estados separados para los datos
-    const [monthlyRate, setMonthlyRate] = useState(null);
-    const [tax, setTax] = useState(null);
+    const [paramMonthlyRate, setParamMonthlyRate] = useState(0.1);
+    const [tax, setTax] = useState(0.5);
     const [utilitiesTable, setUtilitiesTable] = useState([]);
     const [dolarPrice, setDolarPrice] = useState(1000);
 
@@ -19,11 +19,9 @@ export const ParametersProvider = ({ children }) => {
             getDolarPrice();
             // Realizar la solicitud GET
             const response = await apiClient.get('general-parameters');
-
             // Desestructurar datos de la respuesta y actualizarlos en los estados
             const { monthlyRate, tax, utilitiesTable, dolar } = response.data.response[0];
-
-            setMonthlyRate(monthlyRate);
+            setParamMonthlyRate(monthlyRate);
             setTax(tax);
             setUtilitiesTable(utilitiesTable);
             setDolarPrice(dolar);
@@ -69,7 +67,7 @@ export const ParametersProvider = ({ children }) => {
     return (
         <ParametersContext.Provider
             value={{
-                monthlyRate,
+                paramMonthlyRate,
                 tax,
                 utilitiesTable,
                 dolarPrice,

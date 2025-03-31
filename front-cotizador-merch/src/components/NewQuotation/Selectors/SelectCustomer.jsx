@@ -1,12 +1,17 @@
 import { useState, useRef } from "react";
-import { apiClient } from "../../config/axiosConfig";
+import { apiClient } from "../../../config/axiosConfig";
 
 const SelectCustomer = ({ onSelectCustomer }) => {
     const [customerSuggestions, setCustomerSuggestions] = useState([]);
     const [searchValue, setSearchValue] = useState(""); // Controla el valor del input
     const debounceFetch = useRef(null);
 
+    // Función para buscar clientes por nombre
     const fetchCustomersByName = async (name) => {
+        if (!name.trim()) { // Validación para entradas vacías
+            setCustomerSuggestions([]);
+            return;
+        }
         try {
             const response = await apiClient.post("/customers/name", { name });
             const data = Array.isArray(response.data.response) ? response.data.response : [];
@@ -17,6 +22,7 @@ const SelectCustomer = ({ onSelectCustomer }) => {
         }
     };
 
+    // Maneja los cambios en el input de búsqueda
     const handleSearchChange = (e) => {
         const name = e.target.value;
         setSearchValue(name); // Actualiza el valor del input
@@ -29,7 +35,9 @@ const SelectCustomer = ({ onSelectCustomer }) => {
         }, 300);
     };
 
+    // Maneja la selección de un cliente
     const handleCustomerSelect = (customer) => {
+        console.log("Customer selected: ", customer);
         setSearchValue(customer.name); // Establece el nombre del cliente seleccionado en el input
         setCustomerSuggestions([]); // Limpia las sugerencias
         onSelectCustomer(customer); // Notifica al componente padre sobre la selección
@@ -49,7 +57,7 @@ const SelectCustomer = ({ onSelectCustomer }) => {
                         key={customer._id}
                         onClick={() => handleCustomerSelect(customer)} // Selecciona el cliente
                     >
-                        {customer.name} {/* Muestra nombre y código */}
+                        {customer.name} {/* Muestra nombre */}
                     </li>
                 ))}
             </ul>
@@ -58,3 +66,4 @@ const SelectCustomer = ({ onSelectCustomer }) => {
 };
 
 export default SelectCustomer;
+
