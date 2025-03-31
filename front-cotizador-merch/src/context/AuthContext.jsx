@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
-import apiClient from '../config/axiosConfig.js';
+import { apiClient } from '../config/axiosConfig.js';
 
 export const AuthContext = createContext();
 
@@ -16,7 +15,6 @@ export const AuthProvider = ({ children }) => {
             );
             console.log('Login response:', response);
             if (response.status === 200) {
-                console.log('Inicio de sesión exitoso:', response.data);
                 setIsAuthenticated(true);
             } else {
                 alert('Error: Credenciales incorrectas');
@@ -51,7 +49,6 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await apiClient.post(
                 '/sessions/online',
-                {}, // No se envían datos en el cuerpo
                 { withCredentials: true } // Incluye cookies en la solicitud
             );
             if (response.status === 200) {

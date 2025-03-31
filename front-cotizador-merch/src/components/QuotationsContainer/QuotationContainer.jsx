@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import apiClient from '../../config/axiosConfig.js';
+import { apiClient } from '../../config/axiosConfig.js';
 import './QuotationContainer.css';
 import Quotation from '../Quotation/Quotation.jsx';
 

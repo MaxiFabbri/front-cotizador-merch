@@ -1,37 +1,33 @@
-import './Navbar.css'
-import React, { useContext } from 'react';
-import { NavLink, Link } from "react-router-dom"
-import { AuthProvider, AuthContext } from '../../context/AuthContext.jsx';
-import LoginForm from '../Login/LoginForm.jsx';
+import './Navbar.css';
+import React, { use, useContext, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext.jsx';
+import { ParametersContext } from '../../context/ParametersContext.jsx'; // Asegúrate de importar el contexto
+import Button from '../Utils/Button.jsx';
 
-
-const ProtectedContent = () => {
-    return <h1>¡Bienvenido! Has iniciado sesión.</h1>;
-};
 
 const Navbar = () => {
     const { isAuthenticated, logout } = useContext(AuthContext);
-    
-    return (
-        // <AuthProvider>
-            <nav className="navbar-container sticky">
-                <div>
-                    {isAuthenticated ? (
-                        <>
-                            < ProtectedContent />
-                            <button onClick={logout}>Cerrar sesión</button>
-                        </>
-                    ) : (
-                        <LoginForm />
-                    )}
-                </div>
-            
-                <div className="Categories">
-                    <h1>Navbar</h1>
-                </div>
-            </nav>
-        // </AuthProvider>
-    )
-}
+    const { getGeneralParameters, getDolarPrice, dolarPrice } = useContext(ParametersContext); // Aquí consumes el contexto
+    useEffect(() => {  
+        getDolarPrice();
+    }, []);
 
-export default Navbar
+    return (
+        <nav className="navbar-container sticky">
+            <div>
+                <h1>Navbar</h1>
+            </div>
+            <h3>Dolar: {dolarPrice}</h3>
+            <Link to="/new-quotation">
+                <Button text="Nueva Cotización" />
+            </Link>
+            {/* <Button text="General Parameters" onClick={getGeneralParameters} /> */}
+            {/* <Button text="Dolar Price" onClick={getDolarPrice} /> */}
+            <Button text="Cerrar Sesión" onClick={logout} />
+
+        </nav>
+    );
+};
+
+export default Navbar;
