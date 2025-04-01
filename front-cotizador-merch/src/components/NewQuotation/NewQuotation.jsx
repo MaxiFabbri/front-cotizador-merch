@@ -7,10 +7,12 @@ import SelectCustomerPayMethod from "./Selectors/SelectCustomerPaymentMethod.jsx
 
 
 const NewQuotation = () => {
+    const { dolarPrice } = useContext(ParametersContext);
     const today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
     const { paramMonthlyRate } = useContext(ParametersContext); // Extraer monthlyRate del contexto
+
     const [formData, setFormData] = useState({
-        id: "", // El ID se inicializa vacío
+        id: "", // El ID se inicializa con un uno
         date: today, // La fecha se inicializa vacía
         customerId: "",
         customerName: "", // Nuevo campo para almacenar el nombre del cliente
@@ -18,13 +20,14 @@ const NewQuotation = () => {
         paymentMethodName: "", // Nuevo campo para almacenar el nombre del método de pago
         monthlyRate: paramMonthlyRate, // El monthlyRate se inicializa con el valor del context
         currency: "Peso", // Valor por defecto
+        exchangeRate: dolarPrice,
         quoteStatus: "Cotizado", // Valor por defecto
         quoteUnitSellingPrice: 0, // Valor por defecto
         quoteProductsDescription: " ", // Valor por defecto
         isKit: false
     });
-    console.log("Params Monthly Rate: ",paramMonthlyRate," Form Data: ",formData)
-    const [defaultPayment, serDefaultPayment] = useState("")
+
+    // const [defaultPayment, serDefaultPayment] = useState("")
     const [products, setProducts] = useState([]); // Estado para los productos agregados
     const [processes, setProcesses] = useState([]); // Estado para los procesos agregados
 
@@ -35,7 +38,7 @@ const NewQuotation = () => {
             ...formData,
             [name]: type === "checkbox" ? checked : value
         });
-        console.log("New Form Data: ",formData)
+        console.log("New Form Data after Input Change: ", formData)
     };
 
     const handleAddProduct = () => {
@@ -61,6 +64,7 @@ const NewQuotation = () => {
             "paymentMethodId": formData.paymentMethodId,
             "monthlyRate": formData.monthlyRate,
             "currency": formData.currency,
+            "exchangeRate": formData.exchangeRate,
             "quoteStatus": formData.quoteStatus,
             "quoteProductsDescription": formData.quoteProductsDescription,
             "quoteUnitSellingPrice": formData.quoteUnitSellingPrice,
@@ -112,19 +116,28 @@ const NewQuotation = () => {
                 <table>
                     <thead>
                         <tr>
+                            <td></td>
                             <td><label htmlFor="date">Fecha</label></td>
                             <td><label htmlFor="customer">Cliente</label></td>
                             <td><label htmlFor="paymentMethodId">Forma de pago</label></td>
                             <td><label htmlFor="monthlyRate">Tasa de Interes</label></td>
                             <td><label htmlFor="currency">Moneda</label></td>
+                            <td><label htmlFor="exchangeRate">Cambio</label></td>
                             <td><label htmlFor="quoteStatus">Estado</label></td>
                             <td><label htmlFor="isKit">Kit</label></td>
                             <td><label htmlFor="quoteProductsDescription-display"></label>Descripción</td>
                             <td><label htmlFor="quoteUnitSellingPrice-display"></label>Precio Unitario Consolidado</td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     </thead>
                     <tbody>
                         <tr id={formData.id} >
+                            <td>
+                                <button>
+                                    <img src="/delete.png" alt="delete" width="20" height="20" />
+                                </button>
+                            </td>
                             <td>
                                 <input
                                     type="date"
@@ -138,7 +151,6 @@ const NewQuotation = () => {
                             <td>
                                 {/* Usa el componente SelectCustomer */}
                                 <SelectCustomer onSelectCustomer={handleCustomerUpdate} />
-
                             </td>
                             <td>
                                 <SelectCustomerPayMethod
@@ -164,9 +176,19 @@ const NewQuotation = () => {
                                     required
                                 >
                                     <option value="Dolar">Dolar</option>
-                                    <option value="Euro">Euro</option>
+                                    {/* <option value="Euro">Euro</option> */}
                                     <option value="Peso">Peso</option>
                                 </select>
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    id="exchangeRate"
+                                    name="exchangeRate"
+                                    value={formData.exchangeRate}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </td>
                             <td>
                                 <select
@@ -197,7 +219,19 @@ const NewQuotation = () => {
                             <td>
                                 <span id="quoteUnitSellingPrice-display">{formData.quoteUnitSellingPrice}</span>
                             </td>
-                            <button type="submit">Crear Cotización</button>
+                            {/* <td>
+                                <button type="submit">Crear Cotización</button>
+                            </td> */}
+                            <td>
+                                <button type="submit">
+                                    <img src="/create.png" alt="Submit" width="20" height="20" />
+                                </button>
+                            </td>
+                            <td>
+                                <button>
+                                    <img src="/edit.png" alt="edit" width="20" height="20" />
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

@@ -22,8 +22,12 @@ const schema = new mongoose.Schema({
     currency: {
         type: String,
         required: true,
-        enum: ['Dolar', 'Euro', 'Peso'], // Opciones permitidas
+        enum: ['Dolar', 'Peso'], // Opciones permitidas
         default: 'Peso',
+    },
+    exchangeRate: {
+        type: Number,
+        required: true
     },
     quoteStatus: {
         type: String,
@@ -33,8 +37,8 @@ const schema = new mongoose.Schema({
     },
     quoteProductsDescription: {
         type: String,
-        required: true,
-        default: ' '
+        required: false,
+        default: ''
     },    
     quoteUnitSellingPrice: {
         type: Number,
