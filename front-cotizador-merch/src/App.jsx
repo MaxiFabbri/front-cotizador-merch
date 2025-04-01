@@ -14,10 +14,6 @@ import NewQuotation from "./components/NewQuotation/NewQuotation"; // Componente
 
 function App() {
   const { isAuthenticated, logout } = useContext(AuthContext);
-  // useEffect(() => {
-  //   console.log('App.jsx mounted')
-  // }, [])
-
 
   return (
     <>

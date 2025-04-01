@@ -34,7 +34,7 @@ const schema = new mongoose.Schema({
     quoteProductsDescription: {
         type: String,
         required: true,
-        default: ''
+        default: ' '
     },    
     quoteUnitSellingPrice: {
         type: Number,

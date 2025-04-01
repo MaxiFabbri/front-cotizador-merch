@@ -20,7 +20,7 @@ const NewQuotation = () => {
         currency: "Peso", // Valor por defecto
         quoteStatus: "Cotizado", // Valor por defecto
         quoteUnitSellingPrice: 0, // Valor por defecto
-        quoteProductsDescription: "", // Valor por defecto
+        quoteProductsDescription: " ", // Valor por defecto
         isKit: false
     });
     console.log("Params Monthly Rate: ",paramMonthlyRate," Form Data: ",formData)
@@ -62,12 +62,17 @@ const NewQuotation = () => {
             "monthlyRate": formData.monthlyRate,
             "currency": formData.currency,
             "quoteStatus": formData.quoteStatus,
+            "quoteProductsDescription": formData.quoteProductsDescription,
+            "quoteUnitSellingPrice": formData.quoteUnitSellingPrice,
             "isKit": formData.isKit
         };
         console.log("Quotation data to submit: ", dataToSubmit);
         try {
-            const response = await apiClient.post("/api/quotations", dataToSubmit);
-            console.log("Quotation submitted:", response.data);
+            const response = await apiClient.post("/quotations", dataToSubmit);
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                id: response.data.response._id,
+            }));
         } catch (error) {
             console.error("Error submitting quotation:", error);
         }
@@ -119,7 +124,7 @@ const NewQuotation = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr id={formData.id} >
                             <td>
                                 <input
                                     type="date"
@@ -192,10 +197,10 @@ const NewQuotation = () => {
                             <td>
                                 <span id="quoteUnitSellingPrice-display">{formData.quoteUnitSellingPrice}</span>
                             </td>
+                            <button type="submit">Crear Cotización</button>
                         </tr>
                     </tbody>
                 </table>
-                <button type="submit">Crear Cotización</button>
             </form>
             {/* <div>
                 <table>
