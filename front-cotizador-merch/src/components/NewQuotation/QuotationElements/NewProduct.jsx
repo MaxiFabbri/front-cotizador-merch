@@ -3,7 +3,7 @@ import { apiClient } from "../../../config/axiosConfig";
 import IconButton from "../../Utils/IconButton";
 // import NewProcess from "./NewProcess"; // Asegúrate de importar el componente NewProcess
 
-const ProductForm = ({ quotationId }) => {
+const NewProduct = ({ quotationId }) => {
     const [prodData, setProdData] = useState({
         quotationId: quotationId,
         quantity: 1,
@@ -14,6 +14,8 @@ const ProductForm = ({ quotationId }) => {
         unitSellingPrice: 0,
         productDescription: ""
     });
+
+    console.log("Prod data inicial: ", prodData); // Verifica los datos iniciales
 
     const [showNewProducts, setShowNewProducts] = useState(false); // Estado para mostrar/ocultar el componente NewProcess
 
@@ -41,96 +43,82 @@ const ProductForm = ({ quotationId }) => {
     // };
 
     return (
-        <div>
-            <form>
-                <div>
-                    <label>Quotation ID:</label>
-                    <input
-                        type="text"
-                        name="quotationId"
-                        value={formData.quotationId}
-                    // onChange={handleInputChange}
-                    />
-                </div>
+        <tr>
+            <td>
+                <span>
+                    {prodData.quotationId}
+                </span>
+            </td>
 
-                <div>
-                    <label>Quantity:</label>
-                    <input
-                        type="number"
-                        name="quantity"
-                        value={formData.quantity}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
+            <td>
+                <input
+                    type="number"
+                    name="quantity"
+                    value={prodData.quantity}
+                    onChange={handleInputChange}
+                    required
+                />
+            </td>
 
-                <div>
-                    <label>Production Days:</label>
-                    <input
-                        type="number"
-                        name="productionDays"
-                        value={formData.productionDays}
-                        onChange={handleInputChange}
-                    />
-                </div>
+            <td>
+                <input
+                    type="number"
+                    name="productionDays"
+                    value={prodData.productionDays}
+                    onChange={handleInputChange}
+                />
+            </td>
 
-                <div>
-                    <label>Financing Cost:</label>
-                    <input
-                        type="number"
-                        name="financingCost"
-                        value={formData.financingCost}
-                        onChange={handleInputChange}
-                    />
-                </div>
+            <td>
+                <input
+                    type="number"
+                    name="financingCost"
+                    value={prodData.financingCost}
+                    onChange={handleInputChange}
+                />
+            </td>
 
-                <div>
-                    <label>Shipment Cost:</label>
-                    <input
-                        type="number"
-                        name="shipmentCost"
-                        value={formData.shipmentCost}
-                        onChange={handleInputChange}
-                    />
-                </div>
+            <td>
+                <input
+                    type="number"
+                    name="shipmentCost"
+                    value={prodData.shipmentCost}
+                    onChange={handleInputChange}
+                />
+            </td>
 
-                <div>
-                    <label>Other Cost:</label>
-                    <input
-                        type="number"
-                        name="otherCost"
-                        value={formData.otherCost}
-                        onChange={handleInputChange}
-                    />
-                </div>
+            <td>
+                <input
+                    type="number"
+                    name="otherCost"
+                    value={prodData.otherCost}
+                    onChange={handleInputChange}
+                />
+            </td>
 
-                <div>
-                    <label>Unit Selling Price:</label>
-                    <input
-                        type="number"
-                        name="unitSellingPrice"
-                        value={formData.unitSellingPrice}
-                        onChange={handleInputChange}
-                    />
-                </div>
+            <td>
+                <span>
+                    $ {prodData.unitSellingPrice}
+                </span>
+            </td>
 
-                <div>
-                    <label>Product Description:</label>
-                    <input
-                        type="text"
-                        name="productDescription"
-                        value={formData.productDescription}
-                        onChange={handleInputChange}
-                    />
-                </div>
+            <td>
+                <input
+                    type="text"
+                    name="productDescription"
+                    value={prodData.productDescription}
+                    onChange={handleInputChange}
+                />
+            </td>
+            <td>
                 <IconButton
                     icon="/create.png"
                     text="Crear Cotizacion"
                     onClick={() => handleSubmit}
                 />
-            </form>
-        </div>
+            </td>
+        </tr>
     );
 };
 
-export default ProductForm;
+export default NewProduct;
