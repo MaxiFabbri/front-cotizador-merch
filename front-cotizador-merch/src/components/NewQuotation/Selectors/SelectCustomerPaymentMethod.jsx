@@ -2,14 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import { apiClient } from "../../../config/axiosConfig";
 
 const SelectCustomerPayMethod = ({ defaultPayment, onSelectCustomerPayMethod }) => {
+    // Sincroniza el valor del input con el valor por defecto cuando este cambie
+    useEffect(() => {
+        setSearchValue(defaultPayment);
+    }, [defaultPayment]);
+
     const [customerPayMethodSuggestions, setCustomerPayMethodSuggestions] = useState([]);
     const [searchValue, setSearchValue] = useState(defaultPayment); // Inicializa con el valor por defecto
     const debounceFetch = useRef(null);
-
-    // Sincroniza el valor del input con el valor por defecto cuando este cambie
-    useEffect(() => {
-        setSearchValue(defaultPayment || ""); // Asegura que no sea undefined
-    }, [defaultPayment]);
 
     // Función para buscar métodos de pago por nombre
     const fetchCustomersPayMethodByName = async (name) => {
@@ -36,11 +36,12 @@ const SelectCustomerPayMethod = ({ defaultPayment, onSelectCustomerPayMethod }) 
         }
         debounceFetch.current = setTimeout(() => {
             fetchCustomersPayMethodByName(name); // Realiza la búsqueda después de 300ms
-        }, 300);
+        }, 500);
     };
 
     // Maneja la selección de un método de pago
     const handleCustomerPayMethodSelect = (customerPayMethod) => {
+        console.log("en Handle Customer Paymente Select: ", customerPayMethod);
         setSearchValue(customerPayMethod.description); // Muestra el método seleccionado en el input
         setCustomerPayMethodSuggestions([]); // Limpia las sugerencias
         onSelectCustomerPayMethod(customerPayMethod); // Notifica al padre sobre la selección

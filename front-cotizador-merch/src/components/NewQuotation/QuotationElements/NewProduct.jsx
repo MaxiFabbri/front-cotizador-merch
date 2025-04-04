@@ -1,53 +1,55 @@
 import { useState } from "react";
-import { apiClient } from "../../config/axiosConfig";
-import NewProcess from "./NewProcess"; // Asegúrate de importar el componente NewProcess
+import { apiClient } from "../../../config/axiosConfig";
+import IconButton from "../../Utils/IconButton";
+// import NewProcess from "./NewProcess"; // Asegúrate de importar el componente NewProcess
 
-const ProcessForm = () => {
-    const [formData, setFormData] = useState({
-        quotationId: "",
-        quantity: "",
-        productionDays: "",
-        financingCost: "",
-        shipmentCost: "",
-        otherCost: "",
-        unitSellingPrice: "",
+const ProductForm = ({ quotationId }) => {
+    const [prodData, setProdData] = useState({
+        quotationId: quotationId,
+        quantity: 1,
+        productionDays: 15,
+        financingCost: 0,
+        shipmentCost: 0,
+        otherCost: 0,
+        unitSellingPrice: 0,
         productDescription: ""
     });
 
-    const [showNewProcess, setShowNewProcess] = useState(false); // Estado para mostrar/ocultar el componente NewProcess
+    const [showNewProducts, setShowNewProducts] = useState(false); // Estado para mostrar/ocultar el componente NewProcess
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setProdData({
+            ...prodData,
             [name]: value
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("Prod data a enviar: ", prodData); // Verifica los datos del formulario
         try {
-            const response = await apiClient.post("/api/products", formData);
+            const response = await apiClient.post("/products", prodData);
             console.log("Process submitted:", response.data);
         } catch (error) {
             console.error("Error submitting process:", error);
         }
     };
 
-    const handleAddProcess = () => {
-        setShowNewProcess(true); // Muestra el componente NewProcess
-    };
+    // const handleAddProcess = () => {
+    //     setShowNewProcess(true); // Muestra el componente NewProcess
+    // };
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            <form>
                 <div>
                     <label>Quotation ID:</label>
                     <input
                         type="text"
                         name="quotationId"
                         value={formData.quotationId}
-                        onChange={handleInputChange}
+                    // onChange={handleInputChange}
                     />
                 </div>
 
@@ -69,7 +71,6 @@ const ProcessForm = () => {
                         name="productionDays"
                         value={formData.productionDays}
                         onChange={handleInputChange}
-                        required
                     />
                 </div>
 
@@ -122,17 +123,14 @@ const ProcessForm = () => {
                         onChange={handleInputChange}
                     />
                 </div>
-
-                <button type="submit">Submit</button>
+                <IconButton
+                    icon="/create.png"
+                    text="Crear Cotizacion"
+                    onClick={() => handleSubmit}
+                />
             </form>
-
-            <button type="button" onClick={handleAddProcess}>
-                Add New Process
-            </button>
-
-            {showNewProcess && <NewProcess />} {/* Renderiza el componente NewProcess */}
         </div>
     );
 };
 
-export default ProcessForm;
+export default ProductForm;

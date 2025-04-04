@@ -1,18 +1,27 @@
-import React from 'react';
+import React from "react";
+import IconButton from "../Utils/IconButton.jsx";
 
-const Quotation = ({ quote }) => {
+const Quotation = ({ quote, onDelete }) => {
     return (
-        <tr key={quote._id}>
-            {/* <td>{quote._id}</td> */}
+        <tr id={quote._id}>
+            <td>
+                <IconButton
+                    icon="/delete.png"
+                    text="Eliminar"
+                    onClick={() => onDelete(quote._id)} // Llama a la función pasada como prop
+                />
+            </td>
             <td>{new Date(quote.date).toLocaleDateString()}</td>
             <td>{quote.customerId.name}</td>
-            <td>{quote.customerId.code}</td>
+            <td>{quote.quoteProductsDescription}</td>
+            <td>$ {quote.quoteUnitSellingPrice}</td>
             <td>{quote.quoteStatus}</td>
-            <td>{quote.customerId.customerPaymentMethodId.customer_payment_description}</td>
             <td>{quote.currency}</td>
-            <td>{quote.isKit ? 'Sí' : 'No'}</td>
+            <td>{quote.exchangeRate}</td>
+            <td>{quote.isKit ? "Sí" : "No"}</td>
         </tr>
     );
 };
 
 export default Quotation;
+

@@ -1,0 +1,27 @@
+h3 {
+    text-align: center;
+    margin: 0;
+    padding: 10px;
+    /* background-color: #f4f4f4; */
+    
+}
+
+table {
+    width: 95%;
+    margin: auto;
+    border-collapse: collapse;
+}
+
+thead {
+    height: 40px;
+    border-bottom: 2px solid #666; /* Ajusta el grosor y color del borde */
+
+}
+.quotations-header {
+    display: grid;
+    grid-template-columns: 80% 20%;
+    border-bottom: 1px solid #666;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+}

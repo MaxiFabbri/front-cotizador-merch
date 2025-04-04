@@ -1,23 +1,25 @@
 import { useState, useEffect, useContext, useRef } from "react";
-import { apiClient } from "../../config/axiosConfig";
-import NewProduct from "./NewProduct"; // Asegúrate de importar tu componente NewProduct
-import { ParametersContext } from '../../context/ParametersContext.jsx';
-import SelectCustomer from "./Selectors/SelectCustomer.jsx"; // Asegúrate de importar tu componente SelectCustomer
-import SelectCustomerPayMethod from "./Selectors/SelectCustomerPaymentMethod.jsx"; // Asegúrate de importar tu componente SelectCustomerPaymentMethod
+import { apiClient } from "../../../config/axiosConfig.js";
+import NewProduct from "./NewProduct";
+import { ParametersContext } from '../../../context/ParametersContext.jsx';
+import SelectCustomer from "../Selectors/SelectCustomer.jsx";
+import SelectCustomerPayMethod from "../Selectors/SelectCustomerPaymentMethod.jsx";
+import TextButton from '../../Utils/TextButton.jsx';
+import IconButton from "../../Utils/IconButton.jsx";
 
 
 const NewQuotation = () => {
-    const { dolarPrice } = useContext(ParametersContext);
+    const { dolarPrice, paramMonthlyRate, getDolarPrice } = useContext(ParametersContext); // Extraer dolarPrice del contexto
     const today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
-    const { paramMonthlyRate } = useContext(ParametersContext); // Extraer monthlyRate del contexto
+    useEffect(() => { getDolarPrice()},[NewQuotation])
 
     const [formData, setFormData] = useState({
         id: "", // El ID se inicializa con un uno
         date: today, // La fecha se inicializa vacía
         customerId: "",
         customerName: "", // Nuevo campo para almacenar el nombre del cliente
-        paymentMethodId: "",
-        paymentMethodName: "", // Nuevo campo para almacenar el nombre del método de pago
+        paymentMethodId: " ",
+        paymentMethodName: " ", // Nuevo campo para almacenar el nombre del método de pago
         monthlyRate: paramMonthlyRate, // El monthlyRate se inicializa con el valor del context
         currency: "Peso", // Valor por defecto
         exchangeRate: dolarPrice,
@@ -27,9 +29,8 @@ const NewQuotation = () => {
         isKit: false
     });
 
-    // const [defaultPayment, serDefaultPayment] = useState("")
-    const [products, setProducts] = useState([]); // Estado para los productos agregados
-    const [processes, setProcesses] = useState([]); // Estado para los procesos agregados
+    const [quotationCreated, setQuotationCreated] = useState(false); // Estado para saber si se creó la cotización
+    // const [products, setProducts] = useState([]); // Estado para los productos agregados
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -41,53 +42,12 @@ const NewQuotation = () => {
         console.log("New Form Data after Input Change: ", formData)
     };
 
-    const handleAddProduct = () => {
-        setProducts([...products, {}]); // Agrega un nuevo producto vacío
-    };
-
-    const handleRemoveProduct = (index) => {
-        setProducts(products.filter((_, i) => i !== index)); // Elimina un producto
-    };
-
-    const handleProductChange = (index, newProductData) => {
-        const updatedProducts = products.map((product, i) =>
-            i === index ? newProductData : product
-        );
-        setProducts(updatedProducts);
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const dataToSubmit = {
-            "date": formData.date,
-            "customerId": formData.customerId,
-            "paymentMethodId": formData.paymentMethodId,
-            "monthlyRate": formData.monthlyRate,
-            "currency": formData.currency,
-            "exchangeRate": formData.exchangeRate,
-            "quoteStatus": formData.quoteStatus,
-            "quoteProductsDescription": formData.quoteProductsDescription,
-            "quoteUnitSellingPrice": formData.quoteUnitSellingPrice,
-            "isKit": formData.isKit
-        };
-        console.log("Quotation data to submit: ", dataToSubmit);
-        try {
-            const response = await apiClient.post("/quotations", dataToSubmit);
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                id: response.data.response._id,
-            }));
-        } catch (error) {
-            console.error("Error submitting quotation:", error);
-        }
-    };
-
     const fetchCustomersPayMethodById = async (id) => {
         try {
             const response = await apiClient.get(`customer-payment-methods/${id}`);
             return response.data.response.customer_payment_description;
         } catch (error) {
-            console.error("Error al buscar clientes:", error);
+            console.error("Error al buscar forma de pago:", error);
             // setFormData.paymentMethodName("ERROR"); // Restablece a vacío en caso de error
         }
     };
@@ -109,14 +69,61 @@ const NewQuotation = () => {
             paymentMethodId: customerPaymentMethod._id || "",
             paymentMethodName: customerPaymentMethod.customer_payment_description || "",
         }));
+        console.log("Form Data después de setFormData: ", formData);
     }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const dataToSubmit = {
+            "date": formData.date,
+            "customerId": formData.customerId,
+            "paymentMethodId": formData.paymentMethodId,
+            "monthlyRate": formData.monthlyRate,
+            "currency": formData.currency,
+            "exchangeRate": formData.exchangeRate,
+            "quoteStatus": formData.quoteStatus,
+            "quoteProductsDescription": formData.quoteProductsDescription,
+            "quoteUnitSellingPrice": formData.quoteUnitSellingPrice,
+            "isKit": formData.isKit
+        };
+        console.log("Quotation data to submit: ", dataToSubmit);
+        try {
+            const response = await apiClient.post("/quotations", dataToSubmit);
+            const id = response.data.response._id;
+            if (id) {
+                setQuotationCreated(true);
+                setFormData((prevFormData) => ({
+                    ...prevFormData,
+                    id: id,
+                }));
+            }
+        } catch (error) {
+            console.error("Error submitting quotation:", error);
+        }
+    };
+
+    const [products, setProducts] = useState([]);
+
+    const handleAddProduct = (quotationId) => {
+        console.log('Añadir producto con el quotation ID:', quotationId);
+        setProducts((prevProducts) => [
+            ...prevProducts,
+            { quotationId } 
+        ]);
+
+    };
+
+    // const handleRemoveProduct = (index) => {
+    //     setProducts(products.filter((_, i) => i !== index)); // Elimina un producto
+    // };
+
+
     return (
         <div>
             <form onSubmit={handleSubmit}>
                 <table>
                     <thead>
                         <tr>
-                            <td></td>
                             <td><label htmlFor="date">Fecha</label></td>
                             <td><label htmlFor="customer">Cliente</label></td>
                             <td><label htmlFor="paymentMethodId">Forma de pago</label></td>
@@ -128,16 +135,10 @@ const NewQuotation = () => {
                             <td><label htmlFor="quoteProductsDescription-display"></label>Descripción</td>
                             <td><label htmlFor="quoteUnitSellingPrice-display"></label>Precio Unitario Consolidado</td>
                             <td></td>
-                            <td></td>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr id={formData.id} >
-                            <td>
-                                <button>
-                                    <img src="/delete.png" alt="delete" width="20" height="20" />
-                                </button>
-                            </td>
+                        <tr key={formData.id} >
                             <td>
                                 <input
                                     type="date"
@@ -149,12 +150,13 @@ const NewQuotation = () => {
                                 />
                             </td>
                             <td>
-                                {/* Usa el componente SelectCustomer */}
-                                <SelectCustomer onSelectCustomer={handleCustomerUpdate} />
+                                <SelectCustomer
+                                defaultCustomer={formData.customerName || ""} 
+                                onSelectCustomer={handleCustomerUpdate} />
                             </td>
                             <td>
                                 <SelectCustomerPayMethod
-                                    defaultPayment={formData.paymentMethodName}
+                                    defaultPayment={formData.paymentMethodName || ""}
                                     onSelectCustomerPayMethod={handleCustomerPaymentMethodUpdate} />
                             </td>
                             <td>
@@ -219,59 +221,28 @@ const NewQuotation = () => {
                             <td>
                                 <span id="quoteUnitSellingPrice-display">{formData.quoteUnitSellingPrice}</span>
                             </td>
-                            {/* <td>
-                                <button type="submit">Crear Cotización</button>
-                            </td> */}
                             <td>
-                                <button type="submit">
-                                    <img src="/create.png" alt="Submit" width="20" height="20" />
-                                </button>
-                            </td>
-                            <td>
-                                <button>
-                                    <img src="/edit.png" alt="edit" width="20" height="20" />
-                                </button>
+                                {!quotationCreated && (
+                                    <IconButton
+                                    icon="/create.png"
+                                    text="Crear Cotizacion"
+                                    onClick={() => handleSubmit}
+                                    />
+                                )}
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </form>
-            {/* <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Product Details</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {products.map((product, index) => (
-                            <tr key={index}>
-                                <td>
-                                    <NewProduct
-                                        data={product}
-                                        onChange={(newProductData) =>
-                                            handleProductChange(index, newProductData)
-                                        }
-                                    />
-                                </td>
-                                <td>
-                                    <button type="button" onClick={() => handleRemoveProduct(index)}>
-                                        Remove Product
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                        <tr>
-                            <td colSpan="2">
-                                <button type="button" onClick={handleAddProduct}>
-                                    Add New Product
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div> */}
+            <div>
+                {quotationCreated && (
+                    <TextButton 
+                    text="Agregar Producto" 
+                    // onClick={handleAddProduct(formData.id)}
+                    onClick={() => handleAddProduct(formData.id)}
+                    />
+                )}
+            </div>
         </div>
 
     );

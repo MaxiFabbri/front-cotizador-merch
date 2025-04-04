@@ -10,7 +10,7 @@ export const ParametersProvider = ({ children }) => {
     const [paramMonthlyRate, setParamMonthlyRate] = useState(0.1);
     const [tax, setTax] = useState(0.5);
     const [utilitiesTable, setUtilitiesTable] = useState([]);
-    const [dolarPrice, setDolarPrice] = useState(1000);
+    const [dolarPrice, setDolarPrice] = useState(1080);
 
     // Función para obtener parámetros generales
     const getGeneralParameters = async () => {
@@ -50,7 +50,7 @@ export const ParametersProvider = ({ children }) => {
     const updateDolarPrice = async (newDolar) => {
         try {
             // Actualizar el estado con el precio del dólar
-            console.log('actualizando dolar: ', newDolar);
+            console.log('actualizando dolar en Context: ', newDolar);
             setDolarPrice(newDolar);
             const updatedDolar = await apiClient.put('general-parameters/67ddd1f2ef05d862858798c3', { dolar: newDolar });
         } catch (error) {

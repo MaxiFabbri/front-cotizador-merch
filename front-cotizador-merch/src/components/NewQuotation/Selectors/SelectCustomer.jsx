@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
 import { apiClient } from "../../../config/axiosConfig";
 
-const SelectCustomer = ({ onSelectCustomer }) => {
+const SelectCustomer = ({ defaultCustomer, onSelectCustomer }) => {
     const [customerSuggestions, setCustomerSuggestions] = useState([]);
-    const [searchValue, setSearchValue] = useState(""); // Controla el valor del input
+    const [searchValue, setSearchValue] = useState(defaultCustomer); // Controla el valor del input
     const debounceFetch = useRef(null);
 
     // Función para buscar clientes por nombre
@@ -37,7 +37,6 @@ const SelectCustomer = ({ onSelectCustomer }) => {
 
     // Maneja la selección de un cliente
     const handleCustomerSelect = (customer) => {
-        console.log("Customer selected: ", customer);
         setSearchValue(customer.name); // Establece el nombre del cliente seleccionado en el input
         setCustomerSuggestions([]); // Limpia las sugerencias
         onSelectCustomer(customer); // Notifica al componente padre sobre la selección

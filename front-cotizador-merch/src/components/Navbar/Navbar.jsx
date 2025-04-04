@@ -3,28 +3,20 @@ import React, { use, useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext.jsx';
 import { ParametersContext } from '../../context/ParametersContext.jsx'; // Asegúrate de importar el contexto
-import Button from '../Utils/Button.jsx';
+import TextButton from '../Utils/TextButton.jsx';
 
 
 const Navbar = () => {
     const { isAuthenticated, logout } = useContext(AuthContext);
-    const { getGeneralParameters, getDolarPrice, dolarPrice } = useContext(ParametersContext); // Aquí consumes el contexto
-    useEffect(() => {  
-        getDolarPrice();
-    }, []);
+    const { getDolarPrice, dolarPrice } = useContext(ParametersContext); // Aquí consumes el contexto
 
     return (
         <nav className="navbar-container sticky">
-            <div>
-                <h1>Navbar</h1>
-            </div>
-            <h3>Dolar: {dolarPrice}</h3>
-            <Link to="/new-quotation">
-                <Button text="Nueva Cotización" />
+            <Link to="/">
+                <h1>Quattrum</h1>
             </Link>
-            {/* <Button text="General Parameters" onClick={getGeneralParameters} /> */}
-            {/* <Button text="Dolar Price" onClick={getDolarPrice} /> */}
-            <Button text="Cerrar Sesión" onClick={logout} />
+            <h4>Dolar hoy: {dolarPrice}</h4>
+            <TextButton text="Cerrar Sesión" onClick={logout} />
 
         </nav>
     );
