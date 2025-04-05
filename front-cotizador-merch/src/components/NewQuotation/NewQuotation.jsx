@@ -1,7 +1,9 @@
-import { useState, useEffect, useContext } from "react";
-import { ParametersContext } from '../../context/ParametersContext.jsx';
+import { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { apiClient } from "../../config/axiosConfig.js";
+
+import { ParametersContext } from '../../context/ParametersContext.jsx';
+import { QuotationContext } from "../../context/QuotationContext";
 
 import DateField from "./InputComponents/DateField.jsx";
 import CurrencySelect from "./InputComponents/CurrencySelect.jsx";
@@ -9,93 +11,71 @@ import ExchangeRateInput from "./InputComponents/ExchangeRateInput.jsx";
 import QuoteStatusSelect from "./InputComponents/QuoteStatusSelect.jsx";
 import IsKitCheckbox from "./InputComponents/IsKitCheckbox.jsx";
 import MonthlyRateInput from "./InputComponents/MonthlyRateInput.jsx";
-import UseQuotationForm from "./InputComponents/UseQuotationForm.jsx";
 import UseCustomerPaymentMethod from "./InputComponents/UseCustomerPaymentMethod.jsx";
 
 import SelectCustomer from "./Selectors/SelectCustomer.jsx";
 import SelectCustomerPayMethod from "./Selectors/SelectCustomerPaymentMethod.jsx";
 
-import TextButton from '../Utils/TextButton.jsx';
 import IconButton from "../Utils/IconButton.jsx";
 
 import NewProduct from "./QuotationElements/NewProduct.jsx";
 
-
 const NewQuotation = () => {
     const { dolarPrice, paramMonthlyRate, getDolarPrice } = useContext(ParametersContext);
-    const today = new Date().toISOString().split("T")[0];
-    useEffect(() => { getDolarPrice() }, [getDolarPrice]);
+    const { quotationData, updateQuotationData } = useContext(QuotationContext);
 
-    const initialFormState = {
-        id: "",
-        date: today,
-        customerId: "",
-        customerName: "",
-        paymentMethodId: " ",
-        paymentMethodName: " ",
-        monthlyRate: paramMonthlyRate,
-        currency: "Peso",
-        exchangeRate: dolarPrice,
-        quoteStatus: "Cotizado",
-        quoteUnitSellingPrice: 0,
-        quoteProductsDescription: " ",
-        isKit: false,
+    const today = new Date().toISOString().split("T")[0];
+
+    useEffect(() => { 
+        getDolarPrice();
+        updateQuotationData({
+            id: uuidv4(),
+            date: today,
+            monthlyRate: paramMonthlyRate,
+            exchangeRate: dolarPrice,
+        });
+    }, []);
+
+    const getPaymentMethodData = async (paymentId) => {
+        try {
+            const response = await apiClient.get(`/customer-payment-methods/${paymentId}`);
+            const paymentMethod = response.data.response;
+            return paymentMethod;
+        } catch (error) {
+            console.error("Error fetching customer payment method:", error);
+        }
     };
 
-    const { formData, handleInputChange, setFormData } = UseQuotationForm(initialFormState);
-    const [quotationCreated, setQuotationCreated] = useState(false);
-    const [products, setProducts] = useState([]);
-    const [tempRowId, setTempRowId] = useState(uuidv4());
-
-    const { paymentMethodName, isLoading, error } = UseCustomerPaymentMethod(formData.paymentMethodId);
-
-    useEffect(() => {
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            paymentMethodName: paymentMethodName || ""
-        }));
-    }, [paymentMethodName, setFormData]);
-
-    const handleCustomerUpdate = (customer) => {
-        setFormData(prevFormData => ({
-            ...prevFormData,
+    const handleCustomerUpdate = async (customer) => {
+        const paymentMethodData = await getPaymentMethodData(customer.customerPaymentMethodId);
+        updateQuotationData({
             customerId: customer._id || "",
             customerName: customer.name || "",
             paymentMethodId: customer.customerPaymentMethodId || "",
-        }));
-    };
+            paymentMethodName: paymentMethodData.customer_payment_description || "",
+            paymentDaysToCollect: paymentMethodData.days_to_collect || 0,
+        })
+    };    
 
-    const handleCustomerPaymentMethodUpdate = (customerPaymentMethod) => {
-        setFormData(prevFormData => ({
-            ...prevFormData,
-            paymentMethodId: customerPaymentMethod._id || "",
-        }));
+    const handleCustomerPaymentMethodUpdate = (newCustomerPaymentMethod) => {
+        updateQuotationData({
+            paymentMethodId: newCustomerPaymentMethod._id || "",
+            paymentMethodName: newCustomerPaymentMethod.customer_payment_description || "",
+            paymentDaysToCollect: newCustomerPaymentMethod.days_to_collect || 0,
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const dataToSubmit = {
-            "date": formData.date,
-            "customerId": formData.customerId,
-            "paymentMethodId": formData.paymentMethodId,
-            "monthlyRate": formData.monthlyRate,
-            "currency": formData.currency,
-            "exchangeRate": formData.exchangeRate,
-            "quoteStatus": formData.quoteStatus,
-            "quoteProductsDescription": formData.quoteProductsDescription,
-            "quoteUnitSellingPrice": formData.quoteUnitSellingPrice,
-            "isKit": formData.isKit
-        };
-
         try {
-            const response = await apiClient.post("/quotations", dataToSubmit);
+            const response = await apiClient.post("/quotations", quotationData);
             const id = response.data.response._id;
             if (id) {
-                setQuotationCreated(true);
-                setFormData(prevFormData => ({
-                    ...prevFormData,
+                updateQuotationData(prevData => ({
+                    ...prevData,
                     id: id,
                 }));
+                console.log("Quotation created successfully with ID:", id);
             }
         } catch (error) {
             console.error("Error submitting quotation:", error);
@@ -103,102 +83,48 @@ const NewQuotation = () => {
     };
 
     const handleAddProduct = () => {
-        if (formData.id) {
-            setProducts(prevProducts => [
-                ...prevProducts,
-                { quotationId: formData.id }
-            ]);
+        if (quotationData.id) {
+            updateQuotationData(prevData => ({
+                ...prevData,
+                products: [
+                    ...(prevData.products || []),
+                    { quotationId: quotationData.id }
+                ]
+            }));
         } else {
             console.warn("Quotation ID is not yet available.");
         }
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <table>
-                    <thead>
-                        <tr>
-                            <td><label htmlFor="date">Fecha</label></td>
-                            <td><label htmlFor="customer">Cliente</label></td>
-                            <td><label htmlFor="paymentMethodId">Forma de pago</label></td>
-                            <td><label htmlFor="monthlyRate">Tasa de Interes</label></td>
-                            <td><label htmlFor="currency">Moneda</label></td>
-                            <td><label htmlFor="exchangeRate">Cambio</label></td>
-                            <td><label htmlFor="quoteStatus">Estado</label></td>
-                            <td><label htmlFor="isKit">Kit</label></td>
-                            <td><label htmlFor="quoteProductsDescription-display"></label>Descripción</td>
-                            <td><label htmlFor="quoteUnitSellingPrice-display"></label>Precio Unitario Consolidado</td>
-                            <td></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr key={tempRowId} >
-                            <DateField value={formData.date} onChange={handleInputChange} />
-                            <td>
-                                <SelectCustomer
-                                    defaultCustomer={formData.customerName || ""}
-                                    onSelectCustomer={handleCustomerUpdate} />
-                            </td>
-                            <td>
-                                <SelectCustomerPayMethod
-                                    defaultPayment={formData.paymentMethodName || ""}
-                                    onSelectCustomerPayMethod={handleCustomerPaymentMethodUpdate} />
-                            </td>
-                            <MonthlyRateInput value={formData.monthlyRate} onChange={handleInputChange} />
-                            <CurrencySelect value={formData.currency} onChange={handleInputChange} />
-                            <ExchangeRateInput value={formData.exchangeRate} onChange={handleInputChange} />
-                            <QuoteStatusSelect value={formData.quoteStatus} onChange={handleInputChange} />
-                            <IsKitCheckbox checked={formData.isKit} onChange={handleInputChange} />
-                            <td>
-                                <span id="quoteProductsDescription-display">{formData.quoteProductsDescription}</span>
-                            </td>
-                            <td>
-                                <span id="quoteUnitSellingPrice-display">{formData.quoteUnitSellingPrice}</span>
-                            </td>
-                            <td>
-                                {!quotationCreated && (
-                                    <IconButton
-                                        icon="/create.png"
-                                        text="Crear Cotizacion"
-                                        onClick={handleSubmit}
-                                    />
-                                )}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </form>
-            <>
-                {quotationCreated && (
-                    <div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Quote Id</th>
-                                    <th>Cantidad</th>
-                                    <th>Dias Producción</th>
-                                    <th>Costo Financiero</th>
-                                    <th>Costo de Fletes</th>
-                                    <th>Otros Costos</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Descripción</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                < NewProduct quotationId={formData.id} />
-
-                            </tbody>
-                        </table>
-                        {/* <TextButton
-                        text="Agregar Producto"
-                        onClick={handleAddProduct}
-                        /> */}
-                    </div>
-                )}
-            </>
-        </div>
+        <tr key={quotationData.id}>
+            <DateField value={quotationData.date} onChange={(e) => updateQuotationData({ date: e.target.value })} />
+            <td>
+                <SelectCustomer 
+                defaultCustomer={quotationData.customerName || ""} 
+                onSelectCustomer={handleCustomerUpdate} />
+            </td>
+            <td>
+                <SelectCustomerPayMethod 
+                    defaultPayment={quotationData.paymentMethodName || ""} 
+                    onSelectCustomerPayMethod={handleCustomerPaymentMethodUpdate} 
+                />
+            </td>
+            <MonthlyRateInput value={quotationData.monthlyRate} onChange={(e) => updateQuotationData({ monthlyRate: e.target.value })} />
+            <CurrencySelect value={quotationData.currency} onChange={(e) => updateQuotationData({ currency: e.target.value })} />
+            <ExchangeRateInput value={quotationData.exchangeRate} onChange={(e) => updateQuotationData({ exchangeRate: e.target.value })} />
+            <QuoteStatusSelect value={quotationData.quoteStatus} onChange={(e) => updateQuotationData({ ...quotationData, quoteStatus: e.target.value })} />
+            <IsKitCheckbox checked={quotationData.isKit} onChange={(e) => updateQuotationData({ isKit: e.target.checked })} />
+            <td>
+                <span id="quoteProductsDescription-display">{quotationData.quoteProductsDescription}</span>
+            </td>
+            <td>
+                <span id="quoteUnitSellingPrice-display">{quotationData.quoteUnitSellingPrice}</span>
+            </td>
+            <td>
+                <IconButton icon="/create.png" text="Crear Cotización" onClick={handleSubmit} />
+            </td>
+        </tr>
     );
 };
 

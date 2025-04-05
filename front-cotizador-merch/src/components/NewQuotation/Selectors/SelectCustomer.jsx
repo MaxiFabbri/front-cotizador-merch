@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { apiClient } from "../../../config/axiosConfig";
 
-const SelectCustomer = ({ defaultCustomer, onSelectCustomer }) => {
+const SelectCustomer = ({ defaultCustomer, onSelectCustomer }) => {;
     const [customerSuggestions, setCustomerSuggestions] = useState([]);
     const [searchValue, setSearchValue] = useState(defaultCustomer); // Controla el valor del input
     const debounceFetch = useRef(null);
