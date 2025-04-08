@@ -61,6 +61,7 @@ export const ParametersProvider = ({ children }) => {
     // useEffect para actualizar los datos al montar el componente
     useEffect(() => {
         getGeneralParameters();
+        getDolarPrice();
     }, []);
 
     // Exponer estados y funciones en el contexto
@@ -70,9 +71,7 @@ export const ParametersProvider = ({ children }) => {
                 paramMonthlyRate,
                 tax,
                 utilitiesTable,
-                dolarPrice,
-                getGeneralParameters,
-                getDolarPrice,
+                dolarPrice
             }}
         >
             {children}

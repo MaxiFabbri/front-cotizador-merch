@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
 import { apiClient } from "../../config/axiosConfig.js";
 
-import { ParametersContext } from '../../context/ParametersContext.jsx';
+
 import { QuotationContext } from "../../context/QuotationContext";
 
 import DateField from "./InputComponents/DateField.jsx";
@@ -11,30 +10,16 @@ import ExchangeRateInput from "./InputComponents/ExchangeRateInput.jsx";
 import QuoteStatusSelect from "./InputComponents/QuoteStatusSelect.jsx";
 import IsKitCheckbox from "./InputComponents/IsKitCheckbox.jsx";
 import MonthlyRateInput from "./InputComponents/MonthlyRateInput.jsx";
-import UseCustomerPaymentMethod from "./InputComponents/UseCustomerPaymentMethod.jsx";
 
 import SelectCustomer from "./Selectors/SelectCustomer.jsx";
 import SelectCustomerPayMethod from "./Selectors/SelectCustomerPaymentMethod.jsx";
 
 import IconButton from "../Utils/IconButton.jsx";
 
-import NewProduct from "./QuotationElements/NewProduct.jsx";
 
 const NewQuotation = () => {
-    const { dolarPrice, paramMonthlyRate, getDolarPrice } = useContext(ParametersContext);
-    const { quotationData, updateQuotationData } = useContext(QuotationContext);
 
-    const today = new Date().toISOString().split("T")[0];
-
-    useEffect(() => { 
-        getDolarPrice();
-        updateQuotationData({
-            id: uuidv4(),
-            date: today,
-            monthlyRate: paramMonthlyRate,
-            exchangeRate: dolarPrice,
-        });
-    }, []);
+    const { quotationData, updateQuotationData, addProduct } = useContext(QuotationContext);
 
     const getPaymentMethodData = async (paymentId) => {
         try {
@@ -55,7 +40,7 @@ const NewQuotation = () => {
             paymentMethodName: paymentMethodData.customer_payment_description || "",
             paymentDaysToCollect: paymentMethodData.days_to_collect || 0,
         })
-    };    
+    };
 
     const handleCustomerPaymentMethodUpdate = (newCustomerPaymentMethod) => {
         updateQuotationData({
@@ -69,30 +54,14 @@ const NewQuotation = () => {
         e.preventDefault();
         try {
             const response = await apiClient.post("/quotations", quotationData);
-            const id = response.data.response._id;
-            if (id) {
-                updateQuotationData(prevData => ({
-                    ...prevData,
-                    id: id,
-                }));
-                console.log("Quotation created successfully with ID:", id);
+            const dbId = response.data.response._id;
+            console.log("ID de la cotización creada: ", dbId);
+            if (dbId) {
+                updateQuotationData({id: dbId});
+                // handleAddProduct(dbId);
             }
         } catch (error) {
             console.error("Error submitting quotation:", error);
-        }
-    };
-
-    const handleAddProduct = () => {
-        if (quotationData.id) {
-            updateQuotationData(prevData => ({
-                ...prevData,
-                products: [
-                    ...(prevData.products || []),
-                    { quotationId: quotationData.id }
-                ]
-            }));
-        } else {
-            console.warn("Quotation ID is not yet available.");
         }
     };
 
@@ -100,14 +69,14 @@ const NewQuotation = () => {
         <tr key={quotationData.id}>
             <DateField value={quotationData.date} onChange={(e) => updateQuotationData({ date: e.target.value })} />
             <td>
-                <SelectCustomer 
-                defaultCustomer={quotationData.customerName || ""} 
-                onSelectCustomer={handleCustomerUpdate} />
+                <SelectCustomer
+                    defaultCustomer={quotationData.customerName || ""}
+                    onSelectCustomer={handleCustomerUpdate} />
             </td>
             <td>
-                <SelectCustomerPayMethod 
-                    defaultPayment={quotationData.paymentMethodName || ""} 
-                    onSelectCustomerPayMethod={handleCustomerPaymentMethodUpdate} 
+                <SelectCustomerPayMethod
+                    defaultPayment={quotationData.paymentMethodName || ""}
+                    onSelectCustomerPayMethod={handleCustomerPaymentMethodUpdate}
                 />
             </td>
             <MonthlyRateInput value={quotationData.monthlyRate} onChange={(e) => updateQuotationData({ monthlyRate: e.target.value })} />

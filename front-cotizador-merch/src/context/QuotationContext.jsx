@@ -1,8 +1,13 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+import NewProduct from "../components/NewQuotation/QuotationElements/NewProduct";
+import NewQuotation from "../components/NewQuotation/NewQuotation";
+import NewQuotationContainer from "../components/NewQuotation/NewQuotationContainer";
 
 export const QuotationContext = createContext();
 
 export const QuotationProvider = ({ children }) => {
+
     const initialQuotationDataState = {
         id: "",
         date: "",
@@ -25,17 +30,24 @@ export const QuotationProvider = ({ children }) => {
 
     // Función para actualizar la cotización completa
     const updateQuotationData = (updatedData) => {
+        console.log("Actualizando datos de cotización: ", {...updatedData});
         setQuotationData((prevData) => ({
             ...prevData,
             ...updatedData,
         }));
     };
 
+    // Funcion para vaciar el objeto quotationData
+    const clearQuotationData = () => {
+        setQuotationData(initialQuotationDataState);
+    }
+
     // Función para agregar un producto al array de productos
-    const addProduct = (newProduct) => {
+    const addProduct = (prodData) => {
+        console.log("Producto para agregar: ", prodData);
         setQuotationData((prevData) => ({
             ...prevData,
-            products: [...prevData.products, { ...newProduct, processes: [] }],
+            products: [ ...prevData.products, prodData ],
         }));
     };
 
@@ -44,10 +56,22 @@ export const QuotationProvider = ({ children }) => {
         setQuotationData((prevData) => ({
             ...prevData,
             products: prevData.products.map((product) =>
-                product.id === updatedProduct.id ? { ...product, ...updatedProduct } : product
+                (product.productId === updatedProduct.productId)
+                    ? { ...product, ...updatedProduct }
+                    : product
             ),
         }));
+        // console.log("Producto actualizado: ", updatedProduct);
     };
+
+    const removeProduct = (productId) => {
+        setQuotationData((prevData) => ({
+            ...prevData,
+            products: prevData.products.filter((product) => product.productId !== productId),
+        }));
+        console.log("Producto eliminado con ID: ", productId);
+    };
+
 
     // Función para agregar un proceso a un producto específico
     const addProcessToProduct = (productId, newProcess) => {
@@ -82,9 +106,11 @@ export const QuotationProvider = ({ children }) => {
         <QuotationContext.Provider
             value={{
                 quotationData,
+                clearQuotationData,
                 updateQuotationData,
                 addProduct,
                 updateProduct,
+                removeProduct,
                 addProcessToProduct,
                 updateProcessInProduct,
             }}
