@@ -1,11 +1,12 @@
 import { useState, useContext, useEffect } from "react";
 import { QuotationContext } from "../../../context/QuotationContext";
 import IconButton from "../../Utils/IconButton";
+import ButtonAddProcess from "../QuotationUtils/ButtonAddProcess";
 
 
-const NewProduct = (productData) => {
+const NewProduct = ({productData}) => {
     const { updateProduct, removeProduct } = useContext(QuotationContext);
-    const [prodData, setProdData] = useState(productData.productData);
+    const [prodData, setProdData] = useState(productData);
 
     // Estado para manejo de debouncing
     const [debouncedProdData, setDebouncedProdData] = useState(prodData);
@@ -104,13 +105,12 @@ const NewProduct = (productData) => {
             <td>
                 <span>$ {prodData.unitSellingPrice}</span>
             </td>
-            {/* <td>
-                <IconButton
-                    icon="/create.png"
-                    text="Agregar Producto"
-                    onClick={handleAddProduct}
+            <td>
+                <ButtonAddProcess
+                    productId={prodData.productId}
                 />
-            </td> */}
+            </td>
+
         </>
     );
 };

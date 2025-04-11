@@ -30,7 +30,7 @@ export const QuotationProvider = ({ children }) => {
 
     // Función para actualizar la cotización completa
     const updateQuotationData = (updatedData) => {
-        console.log("Actualizando datos de cotización: ", {...updatedData});
+        console.log("Actualizando datos de cotización: ", { ...updatedData });
         setQuotationData((prevData) => ({
             ...prevData,
             ...updatedData,
@@ -47,7 +47,7 @@ export const QuotationProvider = ({ children }) => {
         console.log("Producto para agregar: ", prodData);
         setQuotationData((prevData) => ({
             ...prevData,
-            products: [ ...prevData.products, prodData ],
+            products: [...prevData.products, prodData],
         }));
     };
 
@@ -72,34 +72,58 @@ export const QuotationProvider = ({ children }) => {
         console.log("Producto eliminado con ID: ", productId);
     };
 
-
     // Función para agregar un proceso a un producto específico
-    const addProcessToProduct = (productId, newProcess) => {
+    const addProcessToProduct = (newProcess) => {
         setQuotationData((prevData) => ({
             ...prevData,
-            products: prevData.products.map((product) =>
-                product.id === productId
+            products: prevData.products.map((product) => {
+                return product.productId === newProcess.productId
                     ? { ...product, processes: [...product.processes, newProcess] }
-                    : product
-            ),
+                    : product;
+            }),
         }));
     };
 
     // Función para actualizar un proceso específico dentro de un producto
-    const updateProcessInProduct = (productId, updatedProcess) => {
+    const updateProcessInProduct = (updatedProcess) => {
+        console.log("Actualizando proceso en context: ", updatedProcess);
         setQuotationData((prevData) => ({
             ...prevData,
             products: prevData.products.map((product) =>
-                product.id === productId
+                product.productId === updatedProcess.productId
                     ? {
                         ...product,
                         processes: product.processes.map((process) =>
-                            process.id === updatedProcess.id ? { ...process, ...updatedProcess } : process
+                            process.processId === updatedProcess.processId ? { ...process, ...updatedProcess } : process
                         ),
                     }
                     : product
             ),
         }));
+    };
+
+    const removeProcessInProduct = (productId, processId) => {
+        setQuotationData((prevData) => {
+            return {
+                ...prevData,
+                products: prevData.products.map((product) => {
+                    if (product.productId === productId) {
+                        console.log("Eliminando proceso: ", processId);
+                        console.log("del producto: ", product)
+                        const newProduct = {
+                            ...product,
+                            processes: product.processes.filter(
+                                (process) => process.processId !== processId
+                            )
+                        }
+                        console.log("Nuevo producto: ", newProduct);
+                        return newProduct
+                    } else {
+                        return product;
+                    }
+                })
+            }
+        });
     };
 
     return (
@@ -113,6 +137,7 @@ export const QuotationProvider = ({ children }) => {
                 removeProduct,
                 addProcessToProduct,
                 updateProcessInProduct,
+                removeProcessInProduct,
             }}
         >
             {children}

@@ -66,7 +66,7 @@ const NewQuotation = () => {
     };
 
     return (
-        <tr key={quotationData.id}>
+        <tr key={quotationData.id + "-Test"}>
             <DateField value={quotationData.date} onChange={(e) => updateQuotationData({ date: e.target.value })} />
             <td>
                 <SelectCustomer

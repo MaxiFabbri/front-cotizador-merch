@@ -1,131 +1,108 @@
-import { useState } from "react";
-import { apiClient } from "../../../config/axiosConfig";
-import { v4 as uuidv4 } from 'uuid';
+import { useState, useEffect, useContext } from "react";
+import { QuotationContext } from "../../../context/QuotationContext";
 
 import IconButton from "../../Utils/IconButton";
 
-const NewProcess = (productId) => {
-    const processTempId = uuidv4();
-    const [processData, setProcessData] = useState({
-        processId: processTempId,
-        productId: productId,
-        description: "",
-        supplierId: "",
-        supplierName: "",
-        supplierPaymentMethodId: "",
-        supplierPaymentMethodName: "",
-        daysToPayment: 0,
-        unitCost: 0,
-        fixedCost: 0,
-        subTotalProcessCost: 0
-    });
+const NewProcess = ({ initialProcessData }) => {
+    const { updateProcessInProduct, removeProcessInProduct } = useContext(QuotationContext);
+
+    const [processData, setProcessData] = useState(initialProcessData);
+
+    // Estado para manejo de debouncing
+    const [debouncedProcessData, setDebouncedProcessData] = useState(processData);
+    // Actualizar el estado global al cambiar `debouncedProdData`
+    useEffect(() => {
+        updateProcessInProduct(debouncedProcessData);
+    }, [debouncedProcessData]);
+    // Debounce: Actualizar `debouncedProdData` después de un retraso
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedProcessData(processData);
+        }, 1000);
+        return () => {
+            clearTimeout(handler); // Limpiar el temporizador previo
+        };
+    }, [processData]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setProcessData({
-            ...processData,
+        setProcessData((prevData) => ({
+            ...prevData,
             [name]: value
-        });
+        }));
     };
 
-    const handleSubmitProcess = async (e) => {
+    const handleDeleteProcess = async (e) => {
         e.preventDefault();
-        try {
-            const response = await apiClient.post("/processes", processData);
-            console.log("Process created:", response.data);
-        } catch (error) {
-            console.error("Error creating process:", error);
-        }
+        removeProcessInProduct(processData.productId, processData.processId);
     };
 
     return (
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>ID Producto</th>
-                        <th>Descripción</th>
-                        <th>Proveedor</th>
-                        <th>Forma de Pago</th>
-                        <th>Dias de Pago</th>
-                        <th>Costo Unitario</th>
-                        <th>Costo Fijo</th>
-                        <th>Subtotal Costo del proceso</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr key={processData.processId}>
-                        <td></td>
-                        <td>
-                            <span>
-                                {processData.productId}
-                            </span>
-                        </td>
-
-                        <td>
-                            <input
-                                type="text"
-                                name="description"
-                                value={processData.description}
-                                onChange={handleInputChange}
-                            />
-                        </td>
-                        <td>
-                            <input
-                            type="text"
-                            name="supplierName"
-                            value={processData.supplierName}
-                            onChange={handleInputChange}
-                            />
-                        </td>
-                        <td>
-                            <input
-                                type="text"
-                                name="supplierPaymentMethodName"
-                                value={processData.supplierPaymentMethodName}
-                                onChange={handleInputChange}
-                            />
-                        </td>
-                        <td>
-                            <span>
-                                {processData.daysToPayment}
-                            </span>
-                        </td>
-                        <td>
-                            <input
-                                type="number"
-                                name="unitCost"
-                                value={processData.unitCost}
-                                onChange={handleInputChange}
-                            />
-                        </td>
-                        <td>
-                            <input
-                                type="number"
-                                name="fixedCost"
-                                value={processData.fixedCost}
-                                onChange={handleInputChange}
-                            />
-                        </td>
-                        <td>
-                            <span>
-                                {processData.subTotalProcessCost}
-                            </span>
-                        </td>
-                        <td>
-                            <IconButton
-                                icon="/create.png"
-                                text="Crear Proceso"
-                                onClick={handleSubmitProcess}
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table >
-        </div>    
-    )       
+        <>
+            <td>
+                <IconButton
+                    icon="/delete.png"
+                    text="Eliminar Producto"
+                    onClick={handleDeleteProcess}
+                />
+            </td>
+            <td>
+                <span>
+                    {processData.processId}
+                </span>
+            </td>
+            <td>
+                <input
+                    type="text"
+                    name="description"
+                    value={processData.description}
+                    onChange={handleInputChange}
+                />
+            </td>
+            <td>
+                <input
+                    type="text"
+                    name="supplierName"
+                    value={processData.supplierName}
+                    onChange={handleInputChange}
+                />
+            </td>
+            <td>
+                <input
+                    type="text"
+                    name="supplierPaymentMethodName"
+                    value={processData.supplierPaymentMethodName}
+                    onChange={handleInputChange}
+                />
+            </td>
+            <td>
+                <span>
+                    {processData.daysToPayment}
+                </span>
+            </td>
+            <td>
+                <input
+                    type="number"
+                    name="unitCost"
+                    value={processData.unitCost}
+                    onChange={handleInputChange}
+                />
+            </td>
+            <td>
+                <input
+                    type="number"
+                    name="fixedCost"
+                    value={processData.fixedCost}
+                    onChange={handleInputChange}
+                />
+            </td>
+            <td>
+                <span>
+                    {processData.subTotalProcessCost}
+                </span>
+            </td>
+        </>
+    )
 };
 
-            export default NewProcess;
+export default NewProcess;

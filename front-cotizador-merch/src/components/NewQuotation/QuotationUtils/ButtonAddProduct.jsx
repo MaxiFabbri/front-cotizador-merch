@@ -1,9 +1,9 @@
 import { useContext, useState, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { QuotationContext } from "../../../../context/QuotationContext.jsx";
+import { QuotationContext } from "../../../context/QuotationContext.jsx";
 
 
-import TextButton from "../../../Utils/TextButton";
+import TextButton from "../../Utils/TextButton";
 
 const ButtonAddProduct = () => {
     const { quotationData, addProduct } = useContext(QuotationContext);
