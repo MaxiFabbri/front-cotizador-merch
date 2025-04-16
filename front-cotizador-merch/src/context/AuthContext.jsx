@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
                 { withCredentials: true } // Incluye cookies en la solicitud
             );
             if (response.status === 200) {
-                console.log('Usuario autenticado:', response.data);
+                console.log('Usuario autenticado');
                 setIsAuthenticated(true);
             } else {
                 setIsAuthenticated(false);

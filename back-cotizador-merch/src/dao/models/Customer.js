@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import customerPaymentMethodsModel from './CustomerPaymentMethod.js';   
 
-
-
 const collection = 'Customers';
 
 const schema = new mongoose.Schema({

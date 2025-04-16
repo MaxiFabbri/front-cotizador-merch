@@ -1,4 +1,4 @@
-import supplier from "./models/SupplierPaymentMethod.js";
+import supplier from "./models/Supplier.js";
 
 export default class Suppliers {
     

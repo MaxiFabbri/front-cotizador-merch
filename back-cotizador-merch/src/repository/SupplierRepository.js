@@ -11,6 +11,13 @@ export default class SupplierRepository extends GenericRepository{
     getSupplierById = (id) =>{
         return this.getBy({_id:id})
     }
+    getSupplierByName = (name) =>{  
+        return this.getAll({
+            $or: [
+                { name: { $regex: name, $options: "i" } }, // Coincidencias parciales en "name"
+            ]
+        })
+    }
     deleteSupplierById = (id) =>{
         return this.delete(id)
     }

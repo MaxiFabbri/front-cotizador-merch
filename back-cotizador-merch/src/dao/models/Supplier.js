@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import supplierPaymentMethodsModel from './SupplierPaymentMethod.js';
 
-
 const collection = 'Suppliers';
 
 const schema = new mongoose.Schema({
@@ -22,7 +21,7 @@ const schema = new mongoose.Schema({
         type:String,
         required:false,
     },
-    CustomerPaymentMethod:{
+    supplierPaymentMethodId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'SupplierPaymentMethod'
     }

@@ -18,6 +18,13 @@ async function readSupplierPaymentMethodById(req, res) {
     const response = await supplierPaymentMethodService.getSupplierPaymentMethodById(id);
     return res.status(200).json({ response, message });
 }
+async function readSupplierPaymentMethodByName(req, res) {
+    const { name } = req.body;
+    console.log("Controller Supplier Name: ", name)
+    const message = "SUPPLIER PAYMENT METHODS FOUND";
+    const response = await supplierPaymentMethodService.getSupplierPaymentMethodByName(name);
+    return res.status(200).json({ response, message });
+}
 
 async function updateSupplierPaymentMethod(req, res) {
     const { id } = req.params;
@@ -38,6 +45,7 @@ export {
     createSupplierPaymentMethod,
     readSupplierPaymentMethod,
     readSupplierPaymentMethodById,
+    readSupplierPaymentMethodByName,
     updateSupplierPaymentMethod,
     destroySupplierPaymentMethod
 }

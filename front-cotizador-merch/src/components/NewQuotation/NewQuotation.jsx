@@ -19,7 +19,7 @@ import IconButton from "../Utils/IconButton.jsx";
 
 const NewQuotation = () => {
 
-    const { quotationData, updateQuotationData, addProduct } = useContext(QuotationContext);
+    const { quotationData, updateQuotationData } = useContext(QuotationContext);
 
     const getPaymentMethodData = async (paymentId) => {
         try {
@@ -55,10 +55,8 @@ const NewQuotation = () => {
         try {
             const response = await apiClient.post("/quotations", quotationData);
             const dbId = response.data.response._id;
-            console.log("ID de la cotización creada: ", dbId);
             if (dbId) {
                 updateQuotationData({id: dbId});
-                // handleAddProduct(dbId);
             }
         } catch (error) {
             console.error("Error submitting quotation:", error);
@@ -91,7 +89,9 @@ const NewQuotation = () => {
                 <span id="quoteUnitSellingPrice-display">{quotationData.quoteUnitSellingPrice}</span>
             </td>
             <td>
-                <IconButton icon="/create.png" text="Crear Cotización" onClick={handleSubmit} />
+                {quotationData.id === '' ? (
+                        <IconButton icon="/create.png" text="Crear Cotización" onClick={handleSubmit} />
+                    ) : null}
             </td>
         </tr>
     );

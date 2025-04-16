@@ -6,17 +6,14 @@ import NewProcess from "./QuotationElements/NewProcess";
 import { ParametersContext } from '../../context/ParametersContext.jsx';
 import { QuotationContext } from "../../context/QuotationContext";
 
+import ButtonCalculateQuotation from "./QuotationUtils/ButtonCalculateQuotation.jsx";
 import ButtonAddProduct from "./QuotationUtils/ButtonAddProduct";
-
-import { apiClient } from "../../config/axiosConfig.js";
-
 
 const NewQuotationContainer = () => {
     const { dolarPrice, paramMonthlyRate } = useContext(ParametersContext);
     const { quotationData, clearQuotationData, updateQuotationData } = useContext(QuotationContext);
     const today = new Date().toISOString().split("T")[0];
-
-
+    
     useEffect(() => {
         clearQuotationData()
         updateQuotationData({
@@ -26,7 +23,6 @@ const NewQuotationContainer = () => {
             exchangeRate: dolarPrice,
         });
     }, []);
-    console.log("Quotation Data en NewQuotationContainer: ", quotationData);
 
     return (
         <>
@@ -37,12 +33,11 @@ const NewQuotationContainer = () => {
                 </tbody>
             </table>
             {quotationData.products && quotationData.products.length > 0 ? (
-                <div key={`div-${quotationData.id}`}>
+                <div>
                     <table key={`table-${quotationData.id}`}>
-                        {quotationData.products.map((product) => (
-                            <>
-                                <ProductHeader />
-                                <tbody>
+                            <ProductHeader />
+                            {quotationData.products.map((product) => (
+                                <tbody key={"body-" + product.productId} id={"body-" + product.productId}>
                                     <tr key={product.productId} id={product.productId}>
                                         <NewProduct productData={product} />
                                     </tr>
@@ -65,11 +60,12 @@ const NewQuotationContainer = () => {
                                         </td>
                                     </tr>
                                 </tbody>
-                            </>
-                        ))}
+                            ))}
+                        
                     </table>
                     <div>
                         <ButtonAddProduct />
+                        <ButtonCalculateQuotation />
                     </div>
                 </div>
             ) : (

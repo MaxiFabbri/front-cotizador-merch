@@ -5,11 +5,14 @@ import ButtonAddProcess from "../QuotationUtils/ButtonAddProcess";
 
 
 const NewProduct = ({productData}) => {
-    const { updateProduct, removeProduct } = useContext(QuotationContext);
+    const { quotationData, updateProduct, removeProduct } = useContext(QuotationContext);
     const [prodData, setProdData] = useState(productData);
-
-    // Estado para manejo de debouncing
     const [debouncedProdData, setDebouncedProdData] = useState(prodData);
+
+    const updateProdData = () => {
+        const newProductData = quotationData.products.find((product) => product.productId === prodData.productId);
+        setProdData(newProductData)
+    }
 
     // Actualizar el estado global al cambiar `debouncedProdData`
     useEffect(() => {
@@ -29,6 +32,7 @@ const NewProduct = ({productData}) => {
     // Manejo de cambios en los inputs
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        updateProdData();
         setProdData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -38,7 +42,6 @@ const NewProduct = ({productData}) => {
     // Eliminar el producto del contexto
     const handleDeleteProduct = () => {
         removeProduct(prodData.productId); // Eliminamos el producto usando su ID único
-        console.log(`Producto eliminado con ID: ${prodData.productId}`);
     };
 
     return (

@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import "./QuotationContainer.css";
 import { apiClient } from "../../config/axiosConfig.js";
 import { Link } from "react-router-dom";
 import TextButton from "../Utils/TextButton.jsx";
-import "./QuotationContainer.css";
 import Quotation from "../Quotation/Quotation.jsx";
 
 const Quotations = () => {
     const [quotations, setQuotations] = useState([]); // Estado para las cotizaciones
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [updated, setUpdated] = useState(true);
 
     useEffect(() => {
         // Función para realizar la solicitud GET
         const fetchQuotations = async () => {
+            setUpdated(true);
             try {
                 const response = await apiClient.get("/quotations/populated");
                 setQuotations(response.data.response); // Asigna el array de la respuesta
@@ -23,13 +25,13 @@ const Quotations = () => {
                 setLoading(false);
             }
         };
-
         fetchQuotations();
-    }, [quotations]); // El array vacío asegura que solo se ejecute una vez al montar el componente
+    }, [updated, loading]);
 
     // Función para eliminar una cotización
     const handleDelete = async (id) => {
         if (window.confirm("¿Estás seguro de que deseas eliminar esta cotización?")) {
+            setUpdated(false);
             try {
                 await apiClient.delete(`/quotations/${id}`);
             } catch (error) {

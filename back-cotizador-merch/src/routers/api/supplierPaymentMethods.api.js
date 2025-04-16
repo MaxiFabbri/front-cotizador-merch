@@ -3,6 +3,7 @@ import {
     createSupplierPaymentMethod,
     readSupplierPaymentMethod,
     readSupplierPaymentMethodById,
+    readSupplierPaymentMethodByName,
     updateSupplierPaymentMethod,
     destroySupplierPaymentMethod
 } from "../../controllers/supplierPaymentMethods.controllers.js";
@@ -15,6 +16,7 @@ class SupplierPaymentMethodsApiRouter extends CustomRouter {
         this.init();
     }
     init = () => {
+        this.create("/name", ["USER", "ADMIN"], readSupplierPaymentMethodByName);
         this.create("/", ["USER", "ADMIN"], createSupplierPaymentMethod);
         this.read("/", ["USER", "ADMIN"], readSupplierPaymentMethod);
         this.read("/:id", ["USER", "ADMIN"], readSupplierPaymentMethodById);
