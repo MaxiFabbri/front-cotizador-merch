@@ -1,8 +1,8 @@
 import { createContext, useState, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
-import NewProduct from "../components/NewQuotation/QuotationElements/NewProduct";
-import NewQuotation from "../components/NewQuotation/NewQuotation";
-import NewQuotationContainer from "../components/NewQuotation/NewQuotationContainer";
+// import { v4 as uuidv4 } from "uuid";
+// import NewProduct from "../components/NewQuotation/QuotationElements/NewProduct";
+// import NewQuotation from "../components/NewQuotation/NewQuotation";
+// import NewQuotationContainer from "../components/NewQuotation/NewQuotationContainer";
 
 export const QuotationContext = createContext();
 
@@ -63,7 +63,7 @@ export const QuotationProvider = ({ children }) => {
                     : product
             ),
         }));
-        // console.log("Producto actualizado: ", updatedProduct);
+        console.log("Producto actualizado: ", updatedProduct);
     };
 
     const removeProduct = (productId) => {
@@ -87,7 +87,6 @@ export const QuotationProvider = ({ children }) => {
 
     const updateProcessInProduct = (updatedProcess) => {
         setQuotationData((prevData) => {
-            console.log("Datos previos de la cotización: ", prevData);
             const updatedProducts = prevData.products.map((product) => {
                 if (product.productId === updatedProcess.productId) {
                     const updatedProcesses = product.processes.map((process) => {

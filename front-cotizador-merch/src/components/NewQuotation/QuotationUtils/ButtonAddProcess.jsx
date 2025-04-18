@@ -19,12 +19,11 @@ const ButtonAddProcess = ( {productId} ) => {
         supplierPaymentMethodName: "",
         daysToPayment: 0,
         unitCost: 0,
+        tempunitCost: 0,
         fixedCost: 0,
+        tempfixedCost: 0,
         subTotalProcessCost: 0
     });
-    // useEffect(() => {
-    //     setTempId(uuidv4());
-    // }, [processData]);
 
     useEffect(() => {
         setTempId(uuidv4());

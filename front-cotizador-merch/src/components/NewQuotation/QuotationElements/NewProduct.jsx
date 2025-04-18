@@ -33,10 +33,19 @@ const NewProduct = ({productData}) => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         updateProdData();
+        if (name.startsWith("temp")) {
+            const convertedValue = value / quotationData.exchangeRate;
+            const newName = name.replace("temp", "");
+            setProdData((prevData) => ({
+                ...prevData,
+                [newName]: convertedValue,
+            }))
+        }
+        
         setProdData((prevData) => ({
             ...prevData,
             [name]: value,
-        }));
+        }))
     };
 
     // Eliminar el producto del contexto
@@ -84,24 +93,24 @@ const NewProduct = ({productData}) => {
             <td>
                 <input
                     type="number"
-                    name="financingCost"
-                    value={prodData.financingCost}
+                    name="tempfinancingCost"
+                    value={prodData.tempfinancingCost}
                     onChange={handleInputChange}
                 />
             </td>
             <td>
                 <input
                     type="number"
-                    name="shipmentCost"
-                    value={prodData.shipmentCost}
+                    name="tempshipmentCost"
+                    value={prodData.tempshipmentCost}
                     onChange={handleInputChange}
                 />
             </td>
             <td>
                 <input
                     type="number"
-                    name="otherCost"
-                    value={prodData.otherCost}
+                    name="tempotherCost"
+                    value={prodData.tempotherCost}
                     onChange={handleInputChange}
                 />
             </td>

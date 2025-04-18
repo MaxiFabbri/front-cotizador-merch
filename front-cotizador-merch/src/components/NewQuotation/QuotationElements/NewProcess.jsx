@@ -7,7 +7,7 @@ import { apiClient } from "../../../config/axiosConfig";
 import IconButton from "../../Utils/IconButton";
 
 const NewProcess = ({ initialProcessData }) => {
-    const { updateProcessInProduct, removeProcessInProduct } = useContext(QuotationContext);
+    const { updateProcessInProduct, removeProcessInProduct, quotationData } = useContext(QuotationContext);
 
     const [processData, setProcessData] = useState(initialProcessData);
 
@@ -31,26 +31,33 @@ const NewProcess = ({ initialProcessData }) => {
         try {
             const response = await apiClient.get(`/supplier-payment-methods/${paymentId}`);
             const paymentMethod = response.data.response;
-            console.log("Payment Method Data: ", paymentMethod);
             return paymentMethod;
         } catch (error) {
             console.error("Error fetching customer payment method:", error);
         }
     };
 
+    // Manejo de cambios en los inputs
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        if (name.startsWith("temp")) {
+            const convertedValue = value / quotationData.exchangeRate;
+            const newName = name.replace("temp", "");
+            setProcessData((prevData) => ({
+                ...prevData,
+                [newName]: convertedValue,
+            }))
+        }
+        
         setProcessData((prevData) => ({
             ...prevData,
-            [name]: value
-        }));
+            [name]: value,
+        }))
     };
 
-    const handleSupplierUpdate = async (supplier) => {
-        console.log("Supplier en handle supplier update: ", supplier);
-        const paymentMethodData = await getPaymentMethodData(supplier.supplierPaymentMethodId);
-        console.log("Payment Method Data: ", paymentMethodData);
 
+    const handleSupplierUpdate = async (supplier) => {
+        const paymentMethodData = await getPaymentMethodData(supplier.supplierPaymentMethodId);
         const updatedData = {
             ...processData,
             productId: processData.productId,
@@ -61,9 +68,7 @@ const NewProcess = ({ initialProcessData }) => {
             supplierPaymentMethodName: paymentMethodData.supplier_payment_description || "",
             daysToPayment: paymentMethodData.days_to_payment || 0,
         }
-        // updateProcessInProduct(updatedData)
         setProcessData(updatedData);
-        console.log("Updated Data en handle supplier update: ", updatedData);
     }
 
     const handleSupplierPaymentMethodUpdate = async (supplierPaymentMethod) => {
@@ -126,16 +131,16 @@ const NewProcess = ({ initialProcessData }) => {
             <td>
                 <input
                     type="number"
-                    name="unitCost"
-                    value={processData.unitCost}
+                    name="tempunitCost"
+                    value={processData.tempunitCost}
                     onChange={handleInputChange}
                 />
             </td>
             <td>
                 <input
                     type="number"
-                    name="fixedCost"
-                    value={processData.fixedCost}
+                    name="tempfixedCost"
+                    value={processData.tempfixedCost}
                     onChange={handleInputChange}
                 />
             </td>
