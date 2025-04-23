@@ -9,9 +9,15 @@ const NewProduct = ({productData}) => {
     const [prodData, setProdData] = useState(productData);
     const [debouncedProdData, setDebouncedProdData] = useState(prodData);
 
+    useEffect(() => {
+        updateProdData();
+    }, [quotationData]);
+
     const updateProdData = () => {
         const newProductData = quotationData.products.find((product) => product.productId === prodData.productId);
-        setProdData(newProductData)
+        if (JSON.stringify(newProductData) !== JSON.stringify(prodData)) {
+            setProdData(newProductData);
+        }
     }
 
     // Actualizar el estado global al cambiar `debouncedProdData`
@@ -32,7 +38,7 @@ const NewProduct = ({productData}) => {
     // Manejo de cambios en los inputs
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        updateProdData();
+        // updateProdData();
         if (name.startsWith("temp")) {
             const convertedValue = value / quotationData.exchangeRate;
             const newName = name.replace("temp", "");
@@ -115,7 +121,8 @@ const NewProduct = ({productData}) => {
                 />
             </td>
             <td>
-                <span>$ {prodData.unitSellingPrice}</span>
+                {/* <span>U$S {prodData.unitSellingPrice}</span> */}
+                <span>$ {prodData.pesosPrice}</span>
             </td>
             <td>
                 <ButtonAddProcess

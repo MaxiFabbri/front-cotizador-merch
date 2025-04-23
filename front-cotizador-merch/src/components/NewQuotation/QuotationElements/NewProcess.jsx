@@ -11,12 +11,38 @@ const NewProcess = ({ initialProcessData }) => {
 
     const [processData, setProcessData] = useState(initialProcessData);
 
+    useEffect(() => {
+        updateProcessData();
+    }, [quotationData]);
+
+    // Actualiza el objeto processData con la informacion que está en el Contexto,
+    // para actualizar los cambios en Quotation o en product.
+    const updateProcessData = () => {
+        const product = quotationData.products.find(
+            (product) => product.productId === processData.productId
+        );
+        if (product) {
+            const process = product.processes.find(
+                (process) => process.processId === processData.processId
+            );
+            if (process) {
+                if (JSON.stringify(processData) !== JSON.stringify(process)) {
+                    setProcessData(process);
+                }
+            } 
+        } 
+    };
+
+
+
+
     // Estado para manejo de debouncing
     const [debouncedProcessData, setDebouncedProcessData] = useState(processData);
     // Actualizar el estado global al cambiar `debouncedProdData`
     useEffect(() => {
         updateProcessInProduct(debouncedProcessData);
     }, [debouncedProcessData]);
+
     // Debounce: Actualizar `debouncedProdData` después de un retraso
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -146,7 +172,7 @@ const NewProcess = ({ initialProcessData }) => {
             </td>
             <td>
                 <span>
-                    {processData.subTotalProcessCost}
+                    U$S {processData.subTotalProcessCost}
                 </span>
             </td>
         </>

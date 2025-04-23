@@ -57,13 +57,15 @@ export const QuotationProvider = ({ children }) => {
     const updateProduct = (updatedProduct) => {
         setQuotationData((prevData) => ({
             ...prevData,
-            products: prevData.products.map((product) =>
-                (product.productId === updatedProduct.productId)
+            products: prevData.products.map((product) => {
+                // console.log("updating Product Old: ", product)
+                // console.log("updating Product New: ", updatedProduct)
+                return product.productId === updatedProduct.productId
                     ? { ...product, ...updatedProduct }
                     : product
-            ),
+            }),
         }));
-        console.log("Producto actualizado: ", updatedProduct);
+        console.log("Producto actualizado en quotationData: ", updatedProduct);
     };
 
     const removeProduct = (productId) => {
