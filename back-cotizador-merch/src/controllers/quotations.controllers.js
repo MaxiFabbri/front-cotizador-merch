@@ -1,4 +1,4 @@
-import { quotationService } from "../services/index.service.js";
+import { quotationService, productService, processService } from "../services/index.service.js";
 
 
 async function createQuotation(req, res) {
@@ -33,9 +33,24 @@ async function updateQuotation(req, res) {
     const response = await quotationService.update(id, data);
     return res.status(200).json({ response, message });
 }
+
+// async function destroyQuotation(req, res) {
+//     const { id } = req.params;
+//     const message = "QUOTATION DELETED";
+//     const response = await quotationService.delete(id);
+//     return res.status(200).json({ response, message });
+// }
 async function destroyQuotation(req, res) {
     const { id } = req.params;
-    const message = "QUOTATION DELETED";
+    // Busco los products con este quotation id
+    const responseProducts = await productService.getProductByQuotationId(id);
+    responseProducts.map( async (product) => {
+        // elimino los procesos de ese Producto
+        const resProcDel = await processService.deleteAll({"productId": product._id})
+        // elimino el producto
+        await productService.delete(product._id)
+    })
+    const message = "QUOTATION DELETED 2";
     const response = await quotationService.delete(id);
     return res.status(200).json({ response, message });
 }

@@ -22,7 +22,8 @@ const NewProduct = ({productData}) => {
 
     // Actualizar el estado global al cambiar `debouncedProdData`
     useEffect(() => {
-        updateProduct(debouncedProdData);
+        console.log("Actualizando producto en el contexto: ", debouncedProdData);
+        updateProduct(debouncedProdData, debouncedProdData.productId);
     }, [debouncedProdData]);
 
     // Debounce: Actualizar `debouncedProdData` después de un retraso
@@ -40,7 +41,7 @@ const NewProduct = ({productData}) => {
         const { name, value } = e.target;
         // updateProdData();
         if (name.startsWith("temp")) {
-            const convertedValue = value / quotationData.exchangeRate;
+            const convertedValue = +((value / quotationData.exchangeRate).toFixed(2));
             const newName = name.replace("temp", "");
             setProdData((prevData) => ({
                 ...prevData,
@@ -69,14 +70,11 @@ const NewProduct = ({productData}) => {
                 />
             </td>
             <td>
-                <span>{prodData.productId}</span>
-            </td>
-            <td>
                 <input
                     type="number"
                     name="quantity"
-                    value={prodData.quantity}
-                    onChange={handleInputChange}
+                    defaultValue={prodData.quantity}
+                    onBlur={handleInputChange}
                     required
                 />
             </td>
@@ -84,8 +82,8 @@ const NewProduct = ({productData}) => {
                 <input
                     type="text"
                     name="productDescription"
-                    value={prodData.productDescription}
-                    onChange={handleInputChange}
+                    defaultValue={prodData.productDescription}
+                    onBlur={handleInputChange}
                 />
             </td>
             <td>
@@ -100,24 +98,24 @@ const NewProduct = ({productData}) => {
                 <input
                     type="number"
                     name="tempfinancingCost"
-                    value={prodData.tempfinancingCost}
-                    onChange={handleInputChange}
+                    defaultValue={prodData.tempfinancingCost}
+                    onBlur={handleInputChange}
                 />
             </td>
             <td>
                 <input
                     type="number"
                     name="tempshipmentCost"
-                    value={prodData.tempshipmentCost}
-                    onChange={handleInputChange}
+                    defaultValue={prodData.tempshipmentCost}
+                    onBlur={handleInputChange}
                 />
             </td>
             <td>
                 <input
                     type="number"
                     name="tempotherCost"
-                    value={prodData.tempotherCost}
-                    onChange={handleInputChange}
+                    defaultValue={prodData.tempotherCost}
+                    onBlur={handleInputChange}
                 />
             </td>
             <td>

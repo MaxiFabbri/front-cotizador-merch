@@ -40,7 +40,7 @@ const NewProcess = ({ initialProcessData }) => {
     const [debouncedProcessData, setDebouncedProcessData] = useState(processData);
     // Actualizar el estado global al cambiar `debouncedProdData`
     useEffect(() => {
-        updateProcessInProduct(debouncedProcessData);
+        updateProcessInProduct(debouncedProcessData, debouncedProcessData.processId);
     }, [debouncedProcessData]);
 
     // Debounce: Actualizar `debouncedProdData` después de un retraso
@@ -125,16 +125,11 @@ const NewProcess = ({ initialProcessData }) => {
                 />
             </td>
             <td>
-                <span>
-                    {processData.processId}
-                </span>
-            </td>
-            <td>
                 <input
                     type="text"
                     name="description"
-                    value={processData.description}
-                    onChange={handleInputChange}
+                    defaultValue={processData.description}
+                    onBlur={handleInputChange}
                 />
             </td>
             <td>
@@ -158,16 +153,16 @@ const NewProcess = ({ initialProcessData }) => {
                 <input
                     type="number"
                     name="tempunitCost"
-                    value={processData.tempunitCost}
-                    onChange={handleInputChange}
+                    defaultValue={processData.tempunitCost}
+                    onBlur={handleInputChange}
                 />
             </td>
             <td>
                 <input
                     type="number"
                     name="tempfixedCost"
-                    value={processData.tempfixedCost}
-                    onChange={handleInputChange}
+                    defaultValue={processData.tempfixedCost}
+                    onBlur={handleInputChange}
                 />
             </td>
             <td>

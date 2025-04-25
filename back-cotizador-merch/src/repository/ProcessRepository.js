@@ -14,5 +14,8 @@ export default class ProcessRepository extends GenericRepository{
     deleteProcessById = (id) =>{
         return this.delete(id)
     }
+    deleteProcessByProductId = (productId) => {
+        return this.deleteAll({productId})
+    }
     
 }

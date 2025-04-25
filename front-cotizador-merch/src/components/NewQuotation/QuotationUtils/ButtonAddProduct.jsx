@@ -23,6 +23,7 @@ const ButtonAddProduct = () => {
         unitSellingPrice: 0,
         productDescription: "",
         processes: [],
+        savedToDb: false,
     });
 
     useEffect(() => {

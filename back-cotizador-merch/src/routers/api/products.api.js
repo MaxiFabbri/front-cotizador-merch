@@ -18,7 +18,7 @@ class ProductsApiRouter extends CustomRouter {
         this.read("/", ["USER", "ADMIN"], readProduct);
         this.read("/:quotationId", ["USER", "ADMIN"], getProductByQuotationId);
         this.update("/:id", ["USER", "ADMIN"], updateProduct);
-        this.destroy("/:id", ["USER", "ADMIN"], destroyProduct);      
+        this.destroy("/:id", ["USER", "ADMIN"], destroyProduct);    
     };
 }
 

@@ -22,7 +22,8 @@ const ButtonAddProcess = ( {productId} ) => {
         tempunitCost: 0,
         fixedCost: 0,
         tempfixedCost: 0,
-        subTotalProcessCost: 0
+        subTotalProcessCost: 0,
+        savedToDb: false,
     });
 
     useEffect(() => {

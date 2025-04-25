@@ -86,9 +86,6 @@ const NewQuotation = () => {
                 <span id="quoteProductsDescription-display">{quotationData.quoteProductsDescription}</span>
             </td>
             <td>
-                <span id="quoteUnitSellingPrice-display">{quotationData.quoteUnitSellingPrice}</span>
-            </td>
-            <td>
                 {quotationData.id === '' ? (
                         <IconButton icon="/create.png" text="Crear Cotización" onClick={handleSubmit} />
                     ) : null}

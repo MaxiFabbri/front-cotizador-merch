@@ -40,11 +40,11 @@ const schema = new mongoose.Schema({
         required: false,
         default: ''
     },    
-    quoteUnitSellingPrice: {
-        type: Number,
-        required: true,
-        default: 0
-    },
+    // quoteUnitSellingPrice: {
+    //     type: Number,
+    //     required: false,
+    //     default: 0
+    // },
     isKit: {
         type: Boolean,
         required: true,

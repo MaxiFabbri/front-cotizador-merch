@@ -22,7 +22,7 @@ const NewQuotationContainer = () => {
             monthlyRate: paramMonthlyRate,
             exchangeRate: dolarPrice,
         });
-    }, []);
+    }, [dolarPrice, paramMonthlyRate, today]);
 
     return (
         <>

@@ -22,4 +22,7 @@ export default class Processes {
     delete = (id) =>{
         return processModel.findByIdAndDelete(id);
     }
+    deleteMany = (params) => {
+        return processModel.deleteMany(params);
+    }
 }

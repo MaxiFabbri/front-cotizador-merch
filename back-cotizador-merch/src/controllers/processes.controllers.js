@@ -21,16 +21,22 @@ async function getProcessByProductId(req, res) {
 async function updateProcess(req, res) {
     const { id } = req.params;
     const data = req.body;
-    const message = "PRODUCT UPDATED";
+    const message = "PROCESS UPDATED";
     const response = await processService.update(id, data);
     return res.status(200).json({ response, message });
 }
 async function destroyProcess(req, res) {
     const { id } = req.params;
-    const message = "PRODUCT DELETED";
+    const message = "PROCESS DELETED";
     const response = await processService.delete(id);
+    return res.status(200).json({ response, message });
+}
+async function destroyProcessByProductId(req, res) {
+    const { productId } = req.params;
+    const message = "PROCESES DELETED";
+    const response = await processService.deleteProcessByProductId(productId);
     return res.status(200).json({ response, message });
 }
 
 
-export { createProcess, readProcess, getProcessByProductId, updateProcess, destroyProcess }
+export { createProcess, readProcess, getProcessByProductId, updateProcess, destroyProcess, destroyProcessByProductId }

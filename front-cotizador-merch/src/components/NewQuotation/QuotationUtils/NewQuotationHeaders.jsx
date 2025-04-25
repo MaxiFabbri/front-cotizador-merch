@@ -10,8 +10,7 @@ const QuotationHeader = () => {
                 <th>Cambio</th>
                 <th>Estado</th>
                 <th>Kit</th>
-                <th>Descripción</th>
-                <th>Precio Unitario Consolidado</th>
+                <th>Descripción</th> 
                 <th></th>
             </tr>
         </thead>
@@ -23,7 +22,6 @@ const ProductHeader = () => {
         <thead>
             <tr key={"product-header"}>
                 <th></th>
-                <th>Quote Id</th>
                 <th>Cantidad</th>
                 <th>Descripción</th>
                 <th>Días Producción</th>
@@ -42,7 +40,7 @@ const ProcessHeader = () => {
         <thead>
             <tr key={"process-header"}>
                 <th></th>
-                <th>Process Id</th>
+                {/* <th>Process Id</th> */}
                 <th>Descripción</th>
                 <th>Proveedor</th>
                 <th>Forma de Pago</th>

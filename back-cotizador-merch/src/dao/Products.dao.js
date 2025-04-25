@@ -22,4 +22,8 @@ export default class Products {
     delete = (id) =>{
         return productModel.findByIdAndDelete(id);
     }
+
+    deleteMany = (params) => {
+        return productModel.deleteMany(params);
+    }
 }

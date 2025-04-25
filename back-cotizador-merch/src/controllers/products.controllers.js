@@ -1,4 +1,4 @@
-import { productService } from "../services/index.service.js"
+import { processService, productService } from "../services/index.service.js"
 
 async function createProduct(req, res) {
     const message = "PRODUCT CREATED";
@@ -27,6 +27,9 @@ async function updateProduct(req, res) {
 }
 async function destroyProduct(req, res) {
     const { id } = req.params;
+    // borro los Processes con este productId
+    await processService.deleteAll({"productId":id})
+    // borro el producto
     const message = "PRODUCT DELETED";
     const response = await productService.delete(id);
     return res.status(200).json({ response, message });
