@@ -15,6 +15,10 @@ const schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Suppliers'
     },
+    supplierPaymentMethodId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SupplierPaymentMethods'
+    },
     daysToPayment: {
         type: Number,
         required: false

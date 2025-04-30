@@ -12,6 +12,12 @@ async function readQuotation(req, res) {
     const response = await quotationService.getAll();
     return res.status(200).json({ response, message });
 }
+async function readQuotationByIdPopulated(req, res) {
+    const { id } = req.params;
+    const message = "QUOTATIONS FOUND";
+    const response = await quotationService.getQuotationsByIdPopulated(id);
+    return res.status(200).json({ response, message });
+}
 
 async function readQuotationPopulated(req, res) {
     const message = "QUOTATIONS FOUND";
@@ -22,7 +28,7 @@ async function readQuotationPopulated(req, res) {
 async function readQuotationById(req, res) {
     const { id } = req.params;
     const message = "QUOTATION FOUND";
-    const response = await quotationService.getquotationPaymentMethodById(id);
+    const response = await quotationService.getQuotationById(id);
     return res.status(200).json({ response, message });
 }
 
@@ -34,12 +40,6 @@ async function updateQuotation(req, res) {
     return res.status(200).json({ response, message });
 }
 
-// async function destroyQuotation(req, res) {
-//     const { id } = req.params;
-//     const message = "QUOTATION DELETED";
-//     const response = await quotationService.delete(id);
-//     return res.status(200).json({ response, message });
-// }
 async function destroyQuotation(req, res) {
     const { id } = req.params;
     // Busco los products con este quotation id
@@ -60,6 +60,7 @@ export {
     createQuotation, 
     readQuotation,
     readQuotationPopulated,
+    readQuotationByIdPopulated,
     readQuotationById,
     updateQuotation, 
     destroyQuotation 

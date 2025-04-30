@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import customerPaymentMethodsModel from './CustomerPaymentMethod.js';   
+// import customerPaymentMethodsModel from './CustomerPaymentMethod.js';   
 
 const collection = 'Customers';
 

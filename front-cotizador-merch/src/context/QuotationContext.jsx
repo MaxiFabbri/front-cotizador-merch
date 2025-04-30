@@ -26,10 +26,6 @@ export const QuotationProvider = ({ children }) => {
 
     const [quotationData, setQuotationData] = useState(initialQuotationDataState);
 
-    useState(() => {
-        console.log("Use State de la Cotización: ", quotationData);
-    }, [quotationData]);
-
     const deleteProcessFromDb = async (processId) => {
         // Realiza la operación de eliminación en la base de datos
         try {
@@ -46,7 +42,6 @@ export const QuotationProvider = ({ children }) => {
             console.error("Error al eliminar el producto: ", error)
         }
     }
-
 
     // Función para actualizar la cotización completa
     const updateQuotationData = (updatedData) => {
@@ -83,7 +78,6 @@ export const QuotationProvider = ({ children }) => {
             }),
         }));
         console.log("Producto actualizado en quotationData: ", updatedProduct);
-        // console.log("Estado Actual de la Cotización: ", quotationData);
     };
 
     const removeProduct = (productId) => {

@@ -17,6 +17,16 @@ export default class quotations {
             })
     }
 
+    getQuotationsByIdWithCustomerDetails = (id) => {
+        return quotationModel.findOne({_id:id})
+            .populate({
+                path: 'customerId',
+                populate: {
+                    path: 'customerPaymentMethodId'
+                }
+            })
+    }
+
     getBy = (params) => {
         return quotationModel.findOne(params);
     }

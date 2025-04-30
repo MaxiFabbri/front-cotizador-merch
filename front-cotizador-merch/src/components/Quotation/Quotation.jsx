@@ -1,14 +1,25 @@
 import React from "react";
 import IconButton from "../Utils/IconButton.jsx";
+import { useNavigate } from "react-router-dom"; // Asegúrate de tener React Router instalado
 
 const Quotation = ({ quote, onDelete }) => {
+    const navigate = useNavigate(); // Hook para la navegación
+    
+
+    const handleRowClick = () => {
+        navigate(`/detailed-quotation/${quote._id}`); // Cambia a la nueva página con el ID de la cotización
+    };
+
     return (
-        <tr id={quote._id}>
+        <tr id={quote._id} onClick={handleRowClick} style={{ cursor: "pointer" }}>
             <td>
                 <IconButton
                     icon="/delete.png"
                     text="Eliminar"
-                    onClick={() => onDelete(quote._id)} // Llama a la función pasada como prop
+                    onClick={(e) => {
+                        e.stopPropagation(); // Evita que el evento `onClick` de la fila se active
+                        onDelete(quote._id); 
+                    }}
                 />
             </td>
             <td>{new Date(quote.date).toLocaleDateString()}</td>

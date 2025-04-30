@@ -8,6 +8,7 @@ import LoginForm from './components/Login/LoginForm.jsx';
 import Quotations from './components/QuotationsContainer/QuotationContainer.jsx';
 import Navbar from './components/Navbar/Navbar.jsx';
 import NewQuotationContainer from "./components/NewQuotation/NewQuotationContainer"; // Componente NewQuotation
+import DetailedQuotationContainer from './components/NewQuotation/DetailedQuotationContainer.jsx';
 
 
 
@@ -22,6 +23,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Quotations />} /> {/* Página principal */}
             <Route path="/new-quotation" element={<NewQuotationContainer />} /> {/* Página de Nueva Cotización */}
+            <Route path="/detailed-quotation/:id" element={<DetailedQuotationContainer />} />
           </Routes>
 
         </>

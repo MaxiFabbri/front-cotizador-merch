@@ -28,6 +28,11 @@ const Quotations = () => {
         fetchQuotations();
     }, [updated, loading]);
 
+    // Funcion para abrir la cotización detallada
+    const handleClick = (e) =>{
+        console.log("Click en Cotización: ",e)
+    }
+
     // Función para eliminar una cotización
     const handleDelete = async (id) => {
         if (window.confirm("¿Estás seguro de que deseas eliminar esta cotización?")) {
@@ -73,6 +78,7 @@ const Quotations = () => {
                                 key={quote._id}
                                 quote={quote}
                                 onDelete={handleDelete} // Pasa la función al componente hijo
+                                onClick={handleClick}
                             />
                         ))}
                     </tbody>

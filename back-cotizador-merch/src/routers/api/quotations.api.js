@@ -3,6 +3,7 @@ import {
     createQuotation, 
     readQuotation,
     readQuotationPopulated,
+    readQuotationByIdPopulated,
     readQuotationById,
     updateQuotation, 
     destroyQuotation 
@@ -17,7 +18,8 @@ class QuotationsApiRouter extends CustomRouter {
     init = () => {
         this.create("/", ["USER", "ADMIN"], createQuotation);
         this.read("/", ["USER", "ADMIN"], readQuotation);
-        this.read("/populated", ["USER", "ADMIN"], readQuotationPopulated);
+        this.read("/populated/", ["USER", "ADMIN"], readQuotationPopulated);
+        this.read("/populated/:id", ["USER", "ADMIN"], readQuotationByIdPopulated)
         this.read("/:id", ["USER", "ADMIN"], readQuotationById);
         this.update("/:id", ["USER", "ADMIN"], updateQuotation);
         this.destroy("/:id", ["USER", "ADMIN"], destroyQuotation);      

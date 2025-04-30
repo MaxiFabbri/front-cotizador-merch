@@ -13,7 +13,6 @@ async function readProduct(req, res) {
 }
 async function getProductByQuotationId(req, res) {
     const { quotationId } = req.params;
-    console.log("Product Controller: ",quotationId);
     const message = "PRODUCT FOUND";
     const response = await productService.getProductByQuotationId(quotationId);
     return res.status(200).json({ response, message });

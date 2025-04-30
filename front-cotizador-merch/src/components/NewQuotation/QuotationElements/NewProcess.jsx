@@ -7,7 +7,7 @@ import { apiClient } from "../../../config/axiosConfig";
 import IconButton from "../../Utils/IconButton";
 
 const NewProcess = ({ initialProcessData }) => {
-    const { updateProcessInProduct, removeProcessInProduct, quotationData } = useContext(QuotationContext);
+    const { updateProcessInProduct, removeProcessInProduct, updateProduct, quotationData } = useContext(QuotationContext);
 
     const [processData, setProcessData] = useState(initialProcessData);
 
@@ -32,9 +32,6 @@ const NewProcess = ({ initialProcessData }) => {
             } 
         } 
     };
-
-
-
 
     // Estado para manejo de debouncing
     const [debouncedProcessData, setDebouncedProcessData] = useState(processData);
@@ -129,7 +126,7 @@ const NewProcess = ({ initialProcessData }) => {
                     type="text"
                     name="description"
                     defaultValue={processData.description}
-                    onBlur={handleInputChange}
+                    onInput={handleInputChange}
                 />
             </td>
             <td>

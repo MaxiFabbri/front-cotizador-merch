@@ -40,7 +40,7 @@ const ButtonAddProcess = ( {productId} ) => {
 
     return (
         <IconButton
-            icon="create.png"
+            icon="/create.png"
             tooltip="Agregar Proceso"
             onClick={handleAddNewProcess}
         />

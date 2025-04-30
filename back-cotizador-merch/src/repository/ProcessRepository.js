@@ -5,8 +5,8 @@ export default class ProcessRepository extends GenericRepository{
         super(dao);
     }
     
-    getProcessByProductId = (quotationId) =>{
-        return this.getAll({quotationId});
+    getProcessByProductId = (productId) =>{
+        return this.dao.getByProductPopulated({productId});
     }
     getProcessById = (id) =>{
         return this.getBy({_id:id})

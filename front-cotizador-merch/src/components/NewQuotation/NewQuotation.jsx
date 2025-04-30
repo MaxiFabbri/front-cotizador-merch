@@ -21,6 +21,8 @@ const NewQuotation = () => {
 
     const { quotationData, updateQuotationData } = useContext(QuotationContext);
 
+    console.log("New Quotation: ", quotationData)
+
     const getPaymentMethodData = async (paymentId) => {
         try {
             const response = await apiClient.get(`/customer-payment-methods/${paymentId}`);

@@ -119,7 +119,6 @@ const NewProduct = ({productData}) => {
                 />
             </td>
             <td>
-                {/* <span>U$S {prodData.unitSellingPrice}</span> */}
                 <span>$ {prodData.pesosPrice}</span>
             </td>
             <td>
