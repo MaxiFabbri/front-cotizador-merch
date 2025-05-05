@@ -74,24 +74,25 @@ const NewProduct = ({productData}) => {
                     type="number"
                     name="quantity"
                     defaultValue={prodData.quantity}
-                    onBlur={handleInputChange}
+                    onInput={handleInputChange}
                     required
                 />
             </td>
             <td>
-                <input
+                <span>{prodData.productDescription}</span>
+                {/* <input
                     type="text"
                     name="productDescription"
                     defaultValue={prodData.productDescription}
-                    onBlur={handleInputChange}
-                />
+                    onInput={handleInputChange}
+                /> */}
             </td>
             <td>
                 <input
                     type="number"
                     name="productionDays"
-                    value={prodData.productionDays}
-                    onChange={handleInputChange}
+                    defaultValue={prodData.productionDays}
+                    onInput={handleInputChange}
                 />
             </td>
             <td>
@@ -99,7 +100,7 @@ const NewProduct = ({productData}) => {
                     type="number"
                     name="tempfinancingCost"
                     defaultValue={prodData.tempfinancingCost}
-                    onBlur={handleInputChange}
+                    onInput={handleInputChange}
                 />
             </td>
             <td>
@@ -107,7 +108,7 @@ const NewProduct = ({productData}) => {
                     type="number"
                     name="tempshipmentCost"
                     defaultValue={prodData.tempshipmentCost}
-                    onBlur={handleInputChange}
+                    onInput={handleInputChange}
                 />
             </td>
             <td>
@@ -115,7 +116,7 @@ const NewProduct = ({productData}) => {
                     type="number"
                     name="tempotherCost"
                     defaultValue={prodData.tempotherCost}
-                    onBlur={handleInputChange}
+                    onInput={handleInputChange}
                 />
             </td>
             <td>

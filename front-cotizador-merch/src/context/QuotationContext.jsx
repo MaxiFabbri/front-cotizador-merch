@@ -21,7 +21,7 @@ export const QuotationProvider = ({ children }) => {
         quoteUnitSellingPrice: 0,
         quoteProductsDescription: "",
         isKit: false,
-        products: [], // Array de productos
+        products: [],
     };
 
     const [quotationData, setQuotationData] = useState(initialQuotationDataState);
@@ -66,7 +66,6 @@ export const QuotationProvider = ({ children }) => {
 
     // Función para actualizar un producto específico
     const updateProduct = (updatedProduct, id) => {
-        console.log("Producto actualizado: ", updatedProduct);
         setQuotationData((prevData) => ({
             ...prevData,
             products: prevData.products.map((product) => {
@@ -107,7 +106,7 @@ export const QuotationProvider = ({ children }) => {
     };
 
     const updateProcessInProduct = (updatedProcess, procId) => {
-        console.log("Actualizando Proceso: ", updatedProcess);
+        // console.log("Actualizando Proceso: ", updatedProcess);
         setQuotationData((prevData) => {
             const updatedProducts = prevData.products.map((product) => {
                 if (product.productId === updatedProcess.productId) {

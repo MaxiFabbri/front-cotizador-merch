@@ -151,7 +151,7 @@ const NewProcess = ({ initialProcessData }) => {
                     type="number"
                     name="tempunitCost"
                     defaultValue={processData.tempunitCost}
-                    onBlur={handleInputChange}
+                    onInput={handleInputChange}
                 />
             </td>
             <td>
@@ -159,7 +159,7 @@ const NewProcess = ({ initialProcessData }) => {
                     type="number"
                     name="tempfixedCost"
                     defaultValue={processData.tempfixedCost}
-                    onBlur={handleInputChange}
+                    onInput={handleInputChange}
                 />
             </td>
             <td>

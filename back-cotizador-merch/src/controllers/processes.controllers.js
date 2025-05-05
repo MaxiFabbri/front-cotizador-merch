@@ -3,7 +3,6 @@ import { processService } from "../services/index.service.js"
 async function createProcess(req, res) {
     const message = "PROCESS CREATED";
     const data = req.body;
-    console.log("Create process: ",data)
     const response = await processService.create(data);
     return res.status(201).json({ response, message });
 }

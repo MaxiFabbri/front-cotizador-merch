@@ -18,6 +18,7 @@ const Quotations = () => {
             try {
                 const response = await apiClient.get("/quotations/populated");
                 setQuotations(response.data.response); // Asigna el array de la respuesta
+                console.log("")
             } catch (error) {
                 setError("Error al cargar las cotizaciones");
                 console.error(error);
@@ -64,12 +65,12 @@ const Quotations = () => {
                             <th></th>
                             <th>Fecha</th>
                             <th>Cliente</th>
-                            <th>Descripcion</th>
-                            <th>Precio Unit.</th>
+                            <th>Mpneda</th>
+                            <th>Kit</th>
+                            <th>Cantidad</th>
+                            <th>Producto</th>
+                            <th>Precio Unitario</th>
                             <th>Estado</th>
-                            <th>Moneda</th>
-                            <th>T. Cambio</th>
-                            <th>¿Es kit?</th>
                         </tr>
                     </thead>
                     <tbody>

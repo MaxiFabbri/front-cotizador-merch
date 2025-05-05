@@ -5,8 +5,9 @@ import { apiClient } from "../../../config/axiosConfig.js";
 import TextButton from "../../Utils/TextButton";
 
 const ButtonCalculateQuotation = () => {
-    const { quotationData, updateQuotationData, updateProduct, updateProcessInProduct } = useContext(QuotationContext);
+    const { quotationData, updateProduct, updateProcessInProduct } = useContext(QuotationContext);
     const { utilitiesTable, tax } = useContext(ParametersContext);
+    const [isUpdated, setIsUpdated] = useState(false);
 
     const saveCalculatedQuotation = async () => {
         console.log("Quotation to save: ", quotationData);
@@ -24,17 +25,16 @@ const ButtonCalculateQuotation = () => {
             quoteProductsDescription: quotationData.quoteProductsDescription,
             isKit: quotationData.isKit,
         }
-        // Actualizo en la DB la información de Quotation
+        // Actualizo en la DB la información de Quotation en la BD
         try {
             const responseQuote = await apiClient.put(`/quotations/${quotationId}`, quotationToSave);
-            console.log("Cotización guardada: ", responseQuote.data); 
+            console.log("Cotización guardada: ", responseQuote.data);
         } catch (error) {
             console.error("Error al guardar la cotización: ", error);
         }
-        
+
         // Paso por todos los productos
-        
-        quotationData.products.map( async (product) => {
+        quotationData.products.map(async (product) => {
             console.log("Guardando producto: ", product);
             let newProductId = product.productId;
             // preparo la informacion de Product para guardar en la DB
@@ -67,12 +67,12 @@ const ButtonCalculateQuotation = () => {
                         productId: newProductId,
                         savedToDb: true,
                     }, product.productId);
-                } 
+                }
             } catch (error) {
-                console.error("Error al guardar el producto: ", error);    
+                console.error("Error al guardar el producto: ", error);
             }
-            product.processes.map( async (process) => {
-                console.log("Preparando el proceso para guardar: ",process)
+            product.processes.map(async (process) => {
+                console.log("Preparando el proceso para guardar: ", process)
                 // preparo la informacion de Process para guardar en la DB con el ID del producto
                 const processToSave = {
                     productId: newProductId,
@@ -102,9 +102,9 @@ const ButtonCalculateQuotation = () => {
                         }, process.processId);
                     }
                 } catch (error) {
-                        console.error("Error al guardar el proceso: ", error);
+                    console.error("Error al guardar el proceso: ", error);
                 }
-            });  
+            });
         });
     }
 
@@ -142,7 +142,7 @@ const ButtonCalculateQuotation = () => {
                 // Calculo el subtotal del proceso
                 const newSubtotalProcessCost = +((process.unitCost * product.quantity) + process.fixedCost).toFixed(2);
                 totalProductCost += +newSubtotalProcessCost;
-                if(newProductDescription === "") {
+                if (newProductDescription === "") {
                     newProductDescription = process.description
                 } else {
                     newProductDescription = newProductDescription + ", " + process.description
@@ -170,11 +170,21 @@ const ButtonCalculateQuotation = () => {
                 unitSellingPrice: unitSellingPrice,
                 pesosPrice: pesosPrice
             }, product.productId);
+            console.log("Producto Actualizado con Precio Unitario y Descripcion en el context")
         });
-
+        setIsUpdated(true);
         // Guardo la cotización calculada en la DB
-        saveCalculatedQuotation();
+        // saveCalculatedQuotation();
     };
+
+    // Se ejecuta cuando isUpdated cambia a `true`
+    useEffect(() => {
+        if (isUpdated) {
+            saveCalculatedQuotation();
+            setIsUpdated(false); // Resetear el estado para futuras ejecuciones
+        }
+    }, [isUpdated]);
+
 
     return (
         <TextButton
