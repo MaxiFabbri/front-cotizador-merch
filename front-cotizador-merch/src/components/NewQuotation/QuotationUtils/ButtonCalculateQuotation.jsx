@@ -35,7 +35,6 @@ const ButtonCalculateQuotation = () => {
 
         // Paso por todos los productos
         quotationData.products.map(async (product) => {
-            console.log("Guardando producto: ", product);
             let newProductId = product.productId;
             // preparo la informacion de Product para guardar en la DB
             const productToSave = {
@@ -52,15 +51,12 @@ const ButtonCalculateQuotation = () => {
 
             // guardo en la DB la información de Product
             try {
-                console.log("ver producto: ", product);
                 if (product.savedToDb) {
                     // Si el producto ya está guardado, lo actualizo
                     const responseProduct = await apiClient.put(`/products/${product.productId}`, productToSave);
-                    console.log("Producto Actualizado: ", responseProduct.data);
                 } else {
                     // Si el producto no está guardado, lo guardo
                     const responseProduct = await apiClient.post('/products/', productToSave);
-                    console.log("Producto guardado: ", responseProduct.data);
                     newProductId = responseProduct.data.response._id;
                     // Actualizo el ID del producto en el context
                     updateProduct({
@@ -72,7 +68,6 @@ const ButtonCalculateQuotation = () => {
                 console.error("Error al guardar el producto: ", error);
             }
             product.processes.map(async (process) => {
-                console.log("Preparando el proceso para guardar: ", process)
                 // preparo la informacion de Process para guardar en la DB con el ID del producto
                 const processToSave = {
                     productId: newProductId,
@@ -85,7 +80,6 @@ const ButtonCalculateQuotation = () => {
                     subTotalProcessCost: +process.subTotalProcessCost,
                 }
                 // guardo en la DB la información de Process
-                console.log("Guardando proceso: ", processToSave);
                 try {
                     if (process.savedToDb) {
                         // Si el proceso ya está guardado, lo actualizo
@@ -93,7 +87,6 @@ const ButtonCalculateQuotation = () => {
                     } else {
                         // Si el proceso no está guardado, lo guardo
                         const responseProcess = await apiClient.post('/processes/', processToSave);
-                        // console.log("Proceso guardado: ", responseProcess.data);
                         // Actualizo el ID del proceso y el ID de Producto en el context
                         updateProcessInProduct({
                             processId: responseProcess.data.response._id,

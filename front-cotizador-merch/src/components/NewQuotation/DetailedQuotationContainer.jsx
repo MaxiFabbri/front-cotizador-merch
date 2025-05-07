@@ -10,6 +10,7 @@ import { QuotationContext } from "../../context/QuotationContext.jsx";
 
 import ButtonCalculateQuotation from "./QuotationUtils/ButtonCalculateQuotation.jsx";
 import ButtonAddProduct from "./QuotationUtils/ButtonAddProduct.jsx";
+import ButtonDuplicateQuotatio from "./QuotationUtils/ButtonDuplicateQuotation.jsx";
 import { apiClient } from "../../config/axiosConfig.js";
 
 const DetailedQuotationContainer = (quote) => {
@@ -148,10 +149,11 @@ const DetailedQuotationContainer = (quote) => {
                             ))}
                         
                     </table>
-                    {/* <div>
+                    <div>
                         <ButtonAddProduct />
                         <ButtonCalculateQuotation />
-                    </div> */}
+                        <ButtonDuplicateQuotatio />
+                    </div>
                 </div>
             ) : (
                 <div>
