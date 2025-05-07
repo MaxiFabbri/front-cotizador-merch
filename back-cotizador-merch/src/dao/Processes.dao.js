@@ -26,7 +26,6 @@ export default class Processes {
         return processModel.deleteMany(params);
     }
     getByProductPopulated = (params) => {
-        console.log("Processes Dao params: ", params)
         return processModel.find(params)
         .populate({
                 path: 'supplierId',

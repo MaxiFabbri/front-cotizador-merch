@@ -18,7 +18,6 @@ const Quotations = () => {
             try {
                 const response = await apiClient.get("/quotations/populated");
                 setQuotations(response.data.response); // Asigna el array de la respuesta
-                console.log("")
             } catch (error) {
                 setError("Error al cargar las cotizaciones");
                 console.error(error);
@@ -29,10 +28,6 @@ const Quotations = () => {
         fetchQuotations();
     }, [updated, loading]);
 
-    // Funcion para abrir la cotización detallada
-    const handleClick = (e) =>{
-        console.log("Click en Cotización: ",e)
-    }
 
     // Función para eliminar una cotización
     const handleDelete = async (id) => {
@@ -40,6 +35,7 @@ const Quotations = () => {
             setUpdated(false);
             try {
                 await apiClient.delete(`/quotations/${id}`);
+                setLoading(true)
             } catch (error) {
                 console.error("Error al eliminar la cotización:", error);
             }
@@ -65,7 +61,7 @@ const Quotations = () => {
                             <th></th>
                             <th>Fecha</th>
                             <th>Cliente</th>
-                            <th>Mpneda</th>
+                            <th>Moneda</th>
                             <th>Kit</th>
                             <th>Cantidad</th>
                             <th>Producto</th>
@@ -79,7 +75,6 @@ const Quotations = () => {
                                 key={quote._id}
                                 quote={quote}
                                 onDelete={handleDelete} // Pasa la función al componente hijo
-                                onClick={handleClick}
                             />
                         ))}
                     </tbody>

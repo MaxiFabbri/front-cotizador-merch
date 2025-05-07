@@ -22,7 +22,7 @@ const Quotation = ({ quote, onDelete }) => {
     // Ejecutar `getProducts()` cuando el componente se monta
     useEffect(() => {
         getProducts(quote._id);
-    }, [quote._id]);
+    }, [])
 
     // Manejo de clic en la fila
     const handleRowClick = () => {
@@ -55,7 +55,6 @@ const Quotation = ({ quote, onDelete }) => {
                         <tbody>
                             {products.map((product) => (
                                 <tr key={product._id}>
-                                    
                                     <td>{product.quantity}</td>
                                     <td>{product.productDescription || "Prod"}</td>
                                     <td>$ {(product.unitSellingPrice * quote.exchangeRate).toFixed(0)}</td>

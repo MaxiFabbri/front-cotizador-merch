@@ -170,11 +170,8 @@ const ButtonCalculateQuotation = () => {
                 unitSellingPrice: unitSellingPrice,
                 pesosPrice: pesosPrice
             }, product.productId);
-            console.log("Producto Actualizado con Precio Unitario y Descripcion en el context")
         });
         setIsUpdated(true);
-        // Guardo la cotización calculada en la DB
-        // saveCalculatedQuotation();
     };
 
     // Se ejecuta cuando isUpdated cambia a `true`

@@ -7,9 +7,11 @@ import ButtonAddProcess from "../QuotationUtils/ButtonAddProcess";
 const NewProduct = ({productData}) => {
     const { quotationData, updateProduct, removeProduct } = useContext(QuotationContext);
     const [prodData, setProdData] = useState(productData);
-    const [debouncedProdData, setDebouncedProdData] = useState(prodData);
+    const [isUpdated, setIsUpdated] = useState(true);
 
+    // Actualizar el estado local `prodData` cuando cambie `quotationData`
     useEffect(() => {
+        console.log("Actualizando prodData: ", prodData);
         updateProdData();
     }, [quotationData]);
 
@@ -20,26 +22,19 @@ const NewProduct = ({productData}) => {
         }
     }
 
-    // Actualizar el estado global al cambiar `debouncedProdData`
+    // Actualizar el estado global al cambiar algun dato
     useEffect(() => {
-        console.log("Actualizando producto en el contexto: ", debouncedProdData);
-        updateProduct(debouncedProdData, debouncedProdData.productId);
-    }, [debouncedProdData]);
+        console.log("Actualizando producto en el contexto: ", prodData, " isUpdated: ", isUpdated);
+        if(!isUpdated) {
+            updateProduct(prodData, prodData.productId);
+            setIsUpdated(true); // Cambiamos el estado a `true` para indicar que se ha actualizado
+        }
+    }, [isUpdated]);
 
-    // Debounce: Actualizar `debouncedProdData` después de un retraso
-    useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedProdData(prodData);
-        }, 1000);
-        return () => {
-            clearTimeout(handler); // Limpiar el temporizador previo
-        };
-    }, [prodData]);
 
     // Manejo de cambios en los inputs
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        // updateProdData();
         if (name.startsWith("temp")) {
             const convertedValue = +((value / quotationData.exchangeRate).toFixed(2));
             const newName = name.replace("temp", "");
@@ -53,6 +48,7 @@ const NewProduct = ({productData}) => {
             ...prevData,
             [name]: value,
         }))
+        setIsUpdated(false); // Cambiamos el estado a `false` para indicar que se ha actualizado
     };
 
     // Eliminar el producto del contexto
@@ -80,12 +76,6 @@ const NewProduct = ({productData}) => {
             </td>
             <td>
                 <span>{prodData.productDescription}</span>
-                {/* <input
-                    type="text"
-                    name="productDescription"
-                    defaultValue={prodData.productDescription}
-                    onInput={handleInputChange}
-                /> */}
             </td>
             <td>
                 <input
