@@ -1,13 +1,18 @@
-.icon-button: {
+.icon-button {
     cursor: pointer;
-    /* padding: 2px; */
+    background-color: #999;
+    border-radius: 6px;
+    padding-block-end: 2px;
+    padding-block-start: 6px;
+    padding-inline-end: 7px;
+    padding-inline-start: 7px;
 }
 
 img {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
 }
 
 .button:hover {
-    opacity: 0.8;
+    opacity: 0.1;
 }

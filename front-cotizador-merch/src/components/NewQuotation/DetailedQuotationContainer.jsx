@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "./OneQuotationContainer.css"
 
 import { QuotationHeader, ProductHeader, ProcessHeader } from "./QuotationUtils/NewQuotationHeaders.jsx";
 import NewQuotation from "./NewQuotation.jsx";
@@ -16,7 +17,7 @@ import { apiClient } from "../../config/axiosConfig.js";
 const DetailedQuotationContainer = (quote) => {
     const { dolarPrice, paramMonthlyRate } = useContext(ParametersContext);
     const { quotationData, clearQuotationData, updateQuotationData } = useContext(QuotationContext);
-    const [ newQuotationData, setNewQuotationData ] = useState(null)
+    const [newQuotationData, setNewQuotationData] = useState(null)
     const today = new Date().toISOString().split("T")[0];
     const { id } = useParams()
 
@@ -29,7 +30,7 @@ const DetailedQuotationContainer = (quote) => {
     };
 
     const adjustProcessesData = (dbProcesses, exchangeRate) => {
-        const newProcessesData = dbProcesses.map((process) =>{
+        const newProcessesData = dbProcesses.map((process) => {
             return {
                 processId: process._id,
                 productId: process.productId,
@@ -50,7 +51,6 @@ const DetailedQuotationContainer = (quote) => {
         return newProcessesData
     }
 
-
     const getProcessData = async (productId, exchangeRate) => {
         const responseProcesses = await apiClient(`/processes/${productId}`)
         // Ajusto los datos recibidos para el context
@@ -58,10 +58,9 @@ const DetailedQuotationContainer = (quote) => {
         return adjustedProcessesData
     }
 
-
     const adjustProductData = async (products, exchangeRate) => {
         const newProductsData = await Promise.all(products.map(async (product) => {
-            const newProcesses = await getProcessData(product._id, exchangeRate); 
+            const newProcesses = await getProcessData(product._id, exchangeRate);
             return {
                 productId: product._id,
                 quotationId: product.quotationId,
@@ -80,16 +79,17 @@ const DetailedQuotationContainer = (quote) => {
                 savedToDb: true,
             };
         }));
-    
+
         return newProductsData;
     };
 
-    const getQuotationDataFromDb = async (id) =>{
+    const getQuotationDataFromDb = async (id) => {
         const responseQuotation = await apiClient.get(`/quotations/populated/${id}`)
         let newData = responseQuotation.data.response
-        newData = { ...newData,
+        newData = {
+            ...newData,
             id: newData._id,
-            date:formatDate(newData.date),
+            date: formatDate(newData.date),
             customerId: newData.customerId._id,
             customerName: newData.customerId.name,
             paymentMethodName: newData.customerId.customerPaymentMethodId.customer_payment_description,
@@ -99,38 +99,39 @@ const DetailedQuotationContainer = (quote) => {
         // agrego los Productos
         const responseProducts = await apiClient.get(`/products/${id}`)
         const newProducts = await adjustProductData(responseProducts.data.response, newData.exchangeRate)
-        newData = { ...newData, products: newProducts}
+        newData = { ...newData, products: newProducts }
         updateQuotationData(
             newData
         );
         return newData
     }
-    
-    useEffect( () => {
+
+    useEffect(() => {
         getQuotationDataFromDb(id)
     }, []);
 
     return (
         <>
-            <table>
+            <table className="quotation-table-quotation">
                 <QuotationHeader />
                 <tbody>
                     <NewQuotation />
                 </tbody>
             </table>
             {quotationData.products && quotationData.products.length > 0 ? (
-                <div>
-                    <table key={`table-${quotationData.id}`}>
-                            <ProductHeader />
-                            {quotationData.products.map((product) => (
+                <>
+                    <table key={`table-${quotationData.id}`} className="quotation-table-products">
+                        {quotationData.products.map((product) => (
+                            <table className="product-container" key={product.productId} id={product.productId}>
+                                <ProductHeader />
                                 <tbody key={"body-" + product.productId} id={"body-" + product.productId}>
                                     <tr key={product.productId} id={product.productId}>
                                         <NewProduct productData={product} />
                                     </tr>
                                     <tr key={"processes-" + product.productId} id={"processes-" + product.productId}>
-                                        <td colSpan="12">
+                                        <td colSpan="9">
                                             {product.processes && product.processes.length > 0 ? (
-                                                <table>
+                                                <table className="quotation-table-processes">
                                                     <ProcessHeader />
                                                     <tbody>
                                                         {product.processes.map((process) => (
@@ -146,15 +147,16 @@ const DetailedQuotationContainer = (quote) => {
                                         </td>
                                     </tr>
                                 </tbody>
-                            ))}
-                        
+                            </table>
+                        ))}
+
                     </table>
-                    <div>
+                    <div className="quotation-buttons-container">
                         <ButtonAddProduct />
                         <ButtonCalculateQuotation />
                         <ButtonDuplicateQuotatio />
                     </div>
-                </div>
+                </>
             ) : (
                 <div>
                     {quotationData.id !== '' ? (

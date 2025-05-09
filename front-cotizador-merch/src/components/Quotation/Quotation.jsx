@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import IconButton from "../Utils/IconButton.jsx";
-import { useNavigate } from "react-router-dom"; // Asegúrate de tener React Router instalado
+import { useNavigate } from "react-router-dom";
 import { apiClient } from "../../config/axiosConfig.js";
+import "./Quotation.css";
 
 const Quotation = ({ quote, onDelete }) => {
     const navigate = useNavigate(); // Hook para la navegación
@@ -47,17 +48,17 @@ const Quotation = ({ quote, onDelete }) => {
             <td>{quote.isKit ? "Sí" : "No"}</td>    
 
             {/* Mostrar Loading hasta que los productos estén cargados */}
-            <td colSpan="3">
+            <td colSpan="3" style={{ padding: "0px" }}>
                 {!isProductsLoaded ? (
                     <p>Loading...</p>
                 ) : (
-                    <table>
+                    <table className="products-table">
                         <tbody>
                             {products.map((product) => (
                                 <tr key={product._id}>
-                                    <td>{product.quantity}</td>
+                                    <td style={{ textAlign: "right", paddingRight: "2%"}}>{product.quantity}</td>
                                     <td>{product.productDescription || "Prod"}</td>
-                                    <td>$ {(product.unitSellingPrice * quote.exchangeRate).toFixed(0)}</td>
+                                    <td style={{ textAlign: "right", paddingRight: "2%"}}>$ {(product.unitSellingPrice * quote.exchangeRate).toFixed(0)}.00 </td>
                                 </tr>
                             ))}
                         </tbody>

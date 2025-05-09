@@ -5,7 +5,9 @@ export default class CustomerRepository extends GenericRepository{
     constructor(dao){
         super(dao);
     }
-    
+    getAllCustomersPopulated = () =>{
+        return this.dao.getCustomersWithPaymentMethods()
+    }
     getCustomerByEmail = (email) =>{
         return this.getBy({email});
     }

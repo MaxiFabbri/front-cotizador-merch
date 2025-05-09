@@ -12,8 +12,8 @@ const Navbar = () => {
 
     return (
         <nav className="navbar-container sticky">
-            <Link to="/">
-                <h1>Quattrum</h1>
+            <Link to="/" className="navbar-logo-link">
+                <img src="logo-quattrum-370x53.png" alt="Isologo de Quattrum" className="navbar-isologo"/>
             </Link>
             <h4>Dolar hoy: {dolarPrice}</h4>
             <TextButton text="Cerrar Sesión" onClick={logout} />

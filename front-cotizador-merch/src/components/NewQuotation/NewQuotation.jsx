@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { apiClient } from "../../config/axiosConfig.js";
-
+import "./OneQuotationContainer.css"
 
 import { QuotationContext } from "../../context/QuotationContext";
 
@@ -82,9 +82,7 @@ const NewQuotation = () => {
             <ExchangeRateInput value={quotationData.exchangeRate} onChange={(e) => updateQuotationData({ exchangeRate: e.target.value })} />
             <QuoteStatusSelect value={quotationData.quoteStatus} onChange={(e) => updateQuotationData({ ...quotationData, quoteStatus: e.target.value })} />
             <IsKitCheckbox checked={quotationData.isKit} onChange={(e) => updateQuotationData({ isKit: e.target.checked })} />
-            <td>
-                <span id="quoteProductsDescription-display">{quotationData.quoteProductsDescription}</span>
-            </td>
+            
             <td>
                 {quotationData.id === '' ? (
                         <IconButton icon="/create.png" text="Crear Cotización" onClick={handleSubmit} />

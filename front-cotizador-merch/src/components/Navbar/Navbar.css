@@ -2,28 +2,27 @@
     position: sticky;
     top: 0;
     padding: 1px;
-    background-color: #444 ;
+    background-color: #a0a0a0 ;
 }
-h3 {
+.navbar-container h3 {
     margin: 0px;
 }
 .navbar-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #111;
+    background-color: #aaa;
     height: 60px;
     padding: 0px 80px;
 }
-.Option, .ActiveOption {
-    width: 120px;
-    text-align: center;
-    margin: 0px 30px;
+
+.navbar-logo-link{
+    margin-top: 7px;
 }
-.ActiveOption{
-    font-weight: 800;
-    font-size: large;
-}
-ul {
-    list-style-type: none;
+.navbar-isologo {
+    width: 185px;
+    height: 26.5px;
+};
+.navbar-isologo:hover {
+    cursor: pointer;
 }

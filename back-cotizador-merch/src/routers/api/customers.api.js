@@ -2,6 +2,7 @@ import CustomRouter from "../../utils/CustomRouter.util.js";
 import { 
     createCustomer, 
     readCustomer,
+    readCustomerPopulated,
     readCustomerById,
     readCustomerByNameOrCode,
     updateCustomer, 
@@ -18,6 +19,7 @@ class CustomersApiRouter extends CustomRouter {
         this.create("/name", ["USER", "ADMIN"], readCustomerByNameOrCode);
         this.create("/", ["USER", "ADMIN"], createCustomer);
         this.read("/", ["USER", "ADMIN"], readCustomer);
+        this.read("/populated/", ["USER", "ADMIN"], readCustomerPopulated);
         this.read("/:id", ["USER", "ADMIN"], readCustomerById);
         this.update("/:id", ["USER", "ADMIN"], updateCustomer);
         this.destroy("/:id", ["USER", "ADMIN"], destroyCustomer);      

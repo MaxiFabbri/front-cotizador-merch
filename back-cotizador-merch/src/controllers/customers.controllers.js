@@ -12,6 +12,11 @@ async function readCustomer(req, res) {
     const response = await customerService.getAll();
     return res.status(200).json({ response, message });
 }
+async function readCustomerPopulated(req, res) {
+    const message = "CUSTOMERS POPULATED FOUND";
+    const response = await customerService.getAllCustomersPopulated();
+    return res.status(200).json({ response, message });
+}
 async function readCustomerById(req, res) {
     const { id } = req.params;
     const message = "CUSTOMER FOUND";
@@ -42,6 +47,7 @@ async function destroyCustomer(req, res) {
 export {
     createCustomer, 
     readCustomer,
+    readCustomerPopulated,
     readCustomerById,
     readCustomerByNameOrCode,
     updateCustomer, 
