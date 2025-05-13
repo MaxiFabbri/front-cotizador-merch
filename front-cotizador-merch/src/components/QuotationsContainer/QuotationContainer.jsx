@@ -29,7 +29,6 @@ const Quotations = () => {
         fetchQuotations();
     }, [updated, loading]);
 
-
     // Función para eliminar una cotización
     const handleDelete = async (id) => {
         if (window.confirm("¿Estás seguro de que deseas eliminar esta cotización?")) {

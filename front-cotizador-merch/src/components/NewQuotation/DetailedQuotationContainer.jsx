@@ -15,11 +15,12 @@ import ButtonDuplicateQuotatio from "./QuotationUtils/ButtonDuplicateQuotation.j
 import { apiClient } from "../../config/axiosConfig.js";
 
 const DetailedQuotationContainer = (quote) => {
-    const { dolarPrice, paramMonthlyRate } = useContext(ParametersContext);
+    // const { dolarPrice, paramMonthlyRate } = useContext(ParametersContext);
     const { quotationData, clearQuotationData, updateQuotationData } = useContext(QuotationContext);
-    const [newQuotationData, setNewQuotationData] = useState(null)
+    // const [newQuotationData, setNewQuotationData] = useState(null)
     const today = new Date().toISOString().split("T")[0];
     const { id } = useParams()
+    console.log("Detailed Quotation Container ",id);
 
     const formatDate = (isoDate) => {
         const date = new Date(isoDate);
@@ -85,6 +86,7 @@ const DetailedQuotationContainer = (quote) => {
 
     const getQuotationDataFromDb = async (id) => {
         const responseQuotation = await apiClient.get(`/quotations/populated/${id}`)
+        console.log("Response Quotation: ", responseQuotation.data.response);
         let newData = responseQuotation.data.response
         newData = {
             ...newData,
