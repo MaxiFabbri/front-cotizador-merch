@@ -1,4 +1,4 @@
-import { quotationService, productService, processService } from "../services/index.service.js";
+import { quotationService, customerService, productService, processService } from "../services/index.service.js";
 
 
 async function createQuotation(req, res) {
@@ -17,6 +17,27 @@ async function readQuotationByIdPopulated(req, res) {
     const message = "QUOTATIONS FOUND";
     const response = await quotationService.getQuotationsByIdPopulated(id);
     return res.status(200).json({ response, message });
+}
+async function readQuotationPopulatedByCustomerName(req, res) {
+    const name = req.query.name;
+    console.log("Quotations Controllers name recieved: ",name);
+    try {
+        
+        // Busco el customer por name recibido en la consulta
+        const customers = await customerService.getCustomerByNameOrCode(name);
+        // Recivo los customers que coinciden con el name
+        const customerIds = customers.map(customer => customer._id);
+        const response = await quotationService.getQuotationsFilteredByCustomerIdsPopulated(customerIds)
+
+        const message = "QUOTATIONS FOUND";
+        return res.status(200).json({ response, message });
+
+    } catch (error) {
+        console.error('Error al obtener cotizaciones:', error);
+        return [];
+    }
+    // console.lo
+    // return []
 }
 
 async function readQuotationPopulated(req, res) {
@@ -61,6 +82,7 @@ export {
     readQuotation,
     readQuotationPopulated,
     readQuotationByIdPopulated,
+    readQuotationPopulatedByCustomerName,
     readQuotationById,
     updateQuotation, 
     destroyQuotation 

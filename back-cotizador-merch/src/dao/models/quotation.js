@@ -13,7 +13,6 @@ const schema = new mongoose.Schema({
     },
     paymentMethodId: {
         type: mongoose.Schema.Types.ObjectId,
-        // ref: 'PaymentMethods'
         ref: 'CustomerPaymentMethod'
     },
     monthlyRate: {
@@ -23,7 +22,7 @@ const schema = new mongoose.Schema({
     currency: {
         type: String,
         required: true,
-        enum: ['Dolar', 'Peso'], // Opciones permitidas
+        enum: ['Dolar', 'Peso'],
         default: 'Peso',
     },
     exchangeRate: {
@@ -41,11 +40,6 @@ const schema = new mongoose.Schema({
         required: false,
         default: ''
     },    
-    // quoteUnitSellingPrice: {
-    //     type: Number,
-    //     required: false,
-    //     default: 0
-    // },
     isKit: {
         type: Boolean,
         required: true,

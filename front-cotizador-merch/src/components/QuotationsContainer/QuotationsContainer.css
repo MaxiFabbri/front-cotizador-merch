@@ -1,6 +1,6 @@
 .quotations-header {
     display: grid;
-    grid-template-columns: 80% 20%;
+    grid-template-columns: 17% 71% 12%;
     align-content: center;
     align-items: center;
     height: 40px;
@@ -9,6 +9,10 @@
     text-align: center;
     margin: 0;
     padding: 10px;  
+}
+.quotations-search {
+    margin: 7px 0px 7px 30px;
+    font-size: 1em;
 }
 
 .quotations-table thead {

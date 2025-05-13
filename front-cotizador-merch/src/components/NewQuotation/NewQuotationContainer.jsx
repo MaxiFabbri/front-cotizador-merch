@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { QuotationHeader, ProductHeader, ProcessHeader } from "./QuotationUtils/NewQuotationHeaders.jsx";
+import "./OneQuotationContainer.css"
+
 import NewQuotation from "./NewQuotation"; // Asegúrate de importar tu componente NewQuotation
 import NewProduct from "./QuotationElements/NewProduct";
 import NewProcess from "./QuotationElements/NewProcess";
@@ -26,25 +28,26 @@ const NewQuotationContainer = () => {
 
     return (
         <>
-            <table>
+            <table className="quotation-table-quotation">
                 <QuotationHeader />
                 <tbody>
                     <NewQuotation />
                 </tbody>
             </table>
             {quotationData.products && quotationData.products.length > 0 ? (
-                <div>
-                    <table key={`table-${quotationData.id}`}>
-                            <ProductHeader />
-                            {quotationData.products.map((product) => (
+                <>
+                    <table key={`table-${quotationData.id}`} className="quotation-table-products">
+                        {quotationData.products.map((product) => (
+                            <table className="product-container" key={product.productId} id={product.productId}>
+                                <ProductHeader />
                                 <tbody key={"body-" + product.productId} id={"body-" + product.productId}>
                                     <tr key={product.productId} id={product.productId}>
                                         <NewProduct productData={product} />
                                     </tr>
                                     <tr key={"processes-" + product.productId} id={"processes-" + product.productId}>
-                                        <td colSpan="12">
+                                        <td colSpan="9">
                                             {product.processes && product.processes.length > 0 ? (
-                                                <table>
+                                                <table  className="quotation-table-processes">
                                                     <ProcessHeader />
                                                     <tbody>
                                                         {product.processes.map((process) => (
@@ -60,16 +63,16 @@ const NewQuotationContainer = () => {
                                         </td>
                                     </tr>
                                 </tbody>
-                            ))}
-                        
+                            </table>
+                        ))}
                     </table>
-                    <div>
+                    <div className="quotation-buttons-container">
                         <ButtonAddProduct />
                         <ButtonCalculateQuotation />
                     </div>
-                </div>
+                </>
             ) : (
-                <div>
+                <div className="complete-quotation-message">
                     {quotationData.id !== '' ? (
                         <ButtonAddProduct />
                     ) : (

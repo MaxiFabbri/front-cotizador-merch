@@ -16,5 +16,8 @@ export default class QuotationRepository extends GenericRepository{
     deleteQuotationById = (id) =>{
         return this.delete(id)
     }
+    getQuotationsFilteredByCustomerIdsPopulated(customerIds){
+        return this.dao.getQuotationsByIdWithCustomerDetails( { customerId: { $in: customerIds } } );
+    }
     
 }

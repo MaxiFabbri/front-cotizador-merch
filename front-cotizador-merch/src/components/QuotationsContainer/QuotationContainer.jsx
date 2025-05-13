@@ -9,6 +9,7 @@ const Quotations = () => {
     const [quotations, setQuotations] = useState([]); // Estado para las cotizaciones
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filter, setFilter] = useState("");
     const [updated, setUpdated] = useState(true);
 
     useEffect(() => {
@@ -16,8 +17,8 @@ const Quotations = () => {
         const fetchQuotations = async () => {
             setUpdated(true);
             try {
-                const response = await apiClient.get("/quotations/populated");
-                setQuotations(response.data.response); // Asigna el array de la respuesta
+                const response = await apiClient.get(`/quotations/name?name=${filter}`);
+                setQuotations(response.data.response);
             } catch (error) {
                 setError("Error al cargar las cotizaciones");
                 console.error(error);
@@ -41,6 +42,11 @@ const Quotations = () => {
             }
         }
     };
+    const handleFilterChange = (e) => {
+        const {value} = e.target;
+        setUpdated(false);
+        setFilter(value);
+    }
 
     // Renderizado condicional
     if (loading) return <p>Cargando cotizaciones...</p>;
@@ -49,6 +55,14 @@ const Quotations = () => {
     return (
         <>
             <div className="quotations-header">
+                <input
+                    className="quotations-search"
+                    type="text"
+                    name="filter"
+                    placeholder="Buscar cotización por cliente"
+                    onInput={handleFilterChange}
+                />
+                    
                 <h3>Lista de Cotizaciones</h3>
                 <Link to="/new-quotation">
                     <TextButton text="Nueva Cotización" />
@@ -57,15 +71,17 @@ const Quotations = () => {
             {quotations.length > 0 ? (
                 <table className="quotations-table">
                     <thead>
-                        <th></th>
-                        <th>Fecha</th>
-                        <th>Cliente</th>
-                        <th>Moneda</th>
-                        <th>Kit</th>
-                        <th>Cantidad</th>
-                        <th>Producto</th>
-                        <th>Precio Unitario</th>
-                        <th>Estado</th>
+                        <tr>
+                            <th></th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Moneda</th>
+                            <th>Kit</th>
+                            <th>Cantidad</th>
+                            <th>Producto</th>
+                            <th>Precio Unitario</th>
+                            <th>Estado</th>
+                        </tr>
                     </thead>
                     <tbody className="quotations-container-body">
                         {quotations.map((quote) => (

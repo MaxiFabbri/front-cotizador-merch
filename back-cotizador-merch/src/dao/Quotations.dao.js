@@ -17,14 +17,15 @@ export default class quotations {
             })
     }
 
-    getQuotationsByIdWithCustomerDetails = (id) => {
-        return quotationModel.findOne({_id:id})
-            .populate({
-                path: 'customerId',
-                populate: {
-                    path: 'customerPaymentMethodId'
-                }
-            })
+    getQuotationsByIdWithCustomerDetails = (query) => {
+        const response = quotationModel.find(query)
+        .populate({
+            path: 'customerId',
+            populate: {
+                path: 'customerPaymentMethodId'
+            }
+        })
+        return response
     }
 
     getBy = (params) => {

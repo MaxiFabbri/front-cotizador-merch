@@ -1,7 +1,7 @@
 const QuotationHeader = () => {
     return (
         <thead key={"quotation-header"}>
-            {/* <tr key={"quotation-header"}> */}
+            <tr key={"quotation-header"}>
                 <th>Fecha</th>
                 <th>Cliente</th>
                 <th>Forma de pago</th>
@@ -11,8 +11,8 @@ const QuotationHeader = () => {
                 <th>Estado</th>
                 <th>Kit</th>
                 <th style={{ paddingRight: "20px"}}></th>
-                {/* <th style={{ width: "40px" }}></th> */}
-            {/* </tr> */}
+                
+            </tr>
         </thead>
     );
 }
@@ -20,7 +20,7 @@ const QuotationHeader = () => {
 const ProductHeader = () => {
     return (
         <thead key={"product-header"}>
-            {/* <tr key={"product-header"}> */}
+            <tr key={"product-header"}>
                 <th></th>
                 <th>Cantidad</th>
                 <th>Descripción</th>
@@ -30,7 +30,7 @@ const ProductHeader = () => {
                 <th>Otros Costos</th>
                 <th>Precio Unitario</th>
                 <th></th>
-            {/* </tr> */}
+            </tr>
         </thead>
     )
 }
@@ -38,7 +38,7 @@ const ProductHeader = () => {
 const ProcessHeader = () => {
     return (
         <thead key={"process-header"}>
-            {/* <tr key={"process-header"}> */}
+            <tr key={"process-header"}>
                 <th></th>
                 <th>Descripción</th>
                 <th>Proveedor</th>
@@ -48,7 +48,7 @@ const ProcessHeader = () => {
                 <th>Costo Fijo</th>
                 <th>Sub-Total</th>
                 <th></th>
-            {/* </tr> */}
+            </tr>
         </thead>
     )
 }

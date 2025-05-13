@@ -16,6 +16,11 @@
     text-align: center;
 }
 
+.complete-quotation-message p{
+    text-align: center;
+    margin-top: 10px;
+    font-size: 1.3em;
+}
 
 .quotation-table-products {
     width: 95%;
@@ -27,24 +32,35 @@
 }
 .product-container thead {
     background-color: #ddd;
-    height: 45px;
+    height: 35px;
+}
+.product-container thead th{
+    font-size: 0.9em;
+    font-weight: 500;
 }
 .product-container tbody tr {
-    height: 45px;
+    height: 35px;
 }
 .product-container tbody tr td {
     padding: 0px 10px;
+    font-size: 0.9em;
 }
 
 .quotation-table-processes{
     width: 96%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    margin-top: 10px;
 }
 .quotation-table-processes thead {
     background-color: #eee;
-    height: 30px;
+    height: 22px;
 }
+.quotation-table-processes th {
+    font-size: 1em;
+    font-weight: normal;
+}
+
 .quotation-table-processes tbody tr {
     height: 25px;
 }
